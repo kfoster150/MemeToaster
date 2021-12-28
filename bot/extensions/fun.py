@@ -1,6 +1,6 @@
+from typing_extensions import Required
 import hikari
 import lightbulb
-import logging
 import os, random
 from io import BytesIO
 
@@ -14,7 +14,7 @@ categories.sort()
 plugin = lightbulb.Plugin("Functions")
 
 @plugin.command
-@lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", aliases = ("stats",), guilds = [833477250841837598])
+@lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", guilds = [833477250841837598])
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
 
@@ -44,9 +44,9 @@ async def command_stats(ctx: lightbulb.Context) -> None:
 
 
 @plugin.command
-@lightbulb.option(name = "message", description = "message to send", type = str, default = "still testing")
-@lightbulb.option(name = "category", description = "picture category", type = str, default = "test")
-@lightbulb.command(name = "meme", description = "Do a meme.", aliases = ("pic","emote",), guilds = [833477250841837598])
+@lightbulb.option(name = "message", description = "message to send", type = str, default = "")
+@lightbulb.option(name = "category", description = "picture category", type = str, required = True)
+@lightbulb.command(name = "meme", description = "Do a meme.", guilds = [833477250841837598])
 @lightbulb.implements(lightbulb.SlashCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
     message = ctx.options.message

@@ -1,10 +1,8 @@
 import logging
-from pathlib import Path
 
 import hikari
 import lightbulb
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from pytz import utc
 
 __VERSION__ = '0.2.0'
 
@@ -57,10 +55,3 @@ class Bot(lightbulb.BotApp):
         # YO Message doesn't always send for some reason, but bot shuts down like it should
         await self.stdout_channel.send(f"v{__VERSION__} is shutting down.")
         self.scheduler.shutdown()
-
-
-    async def on_message_create(self, event: hikari.MessageCreateEvent) -> None:
-        if isinstance(event.message.channel_id, hikari.DMChannel):
-            return
-
-        logging.info(f"Message by {event.message.member}: {event.message.content}")

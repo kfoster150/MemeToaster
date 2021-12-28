@@ -1,4 +1,3 @@
-from typing_extensions import Required
 import hikari
 import lightbulb
 import os, random

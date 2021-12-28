@@ -30,7 +30,7 @@ def render(imagePath, message) -> Image:
     font_size = round((w + h)/20)
 
     draw = ImageDraw.Draw(img)
-    font = ImageFont.truetype('arial.ttf', font_size)
+    font = ImageFont.truetype('./data/fonts/arial.ttf', font_size)
 
     margin = round(w/25)
     w_limit = round(w - margin*2)

@@ -29,7 +29,6 @@ class Bot(lightbulb.BotApp):
         self.event_manager.subscribe(hikari.StartingEvent, self.on_starting)
         self.event_manager.subscribe(hikari.StartedEvent, self.on_started)
         self.event_manager.subscribe(hikari.StoppingEvent, self.on_stopping)
-        self.event_manager.subscribe(hikari.MessageCreateEvent, self.on_message_create)
         
         super().run(
             activity = hikari.Activity(

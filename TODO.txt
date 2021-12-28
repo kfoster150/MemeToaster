@@ -1,0 +1,46 @@
+# MVP
+
+- Get the thing
+    - User invokes the bot, provides a category, and writes a message
+    - Bot is invoked
+    - Bot randomly chooses a picture based on the category
+    - Bot attaches the caption to the picture.
+    - Bot sends the picture to the server
+
+- Create Help command (customize for slash commands)
+- create stats command
+
+- Add file size check # YO Tried replicating the file size check from the last bot, but lightbulb doesn't like it for some reason
+
+WATCH CARBERRA'S VIDEO ON PILLOW
+
+# Extra
+- Discord Reload Shortcut
+- NSFW on and off options
+- Scale text outline, just like the text size
+- Include both slash and prefix commands
+- rather than folders, move to sqlite db with cat/link pairs (host pics elsewhere?)
+- Make font outline size adjust with picture size (just like base font size)
+- (properly) modify the help command
+- Copyright/License?
+- 'legitimize' the bot. Maintain github, info page, author info, etc
+- Make the bot public and share with frends :)
+
+
+# Extra Extra
+- Remove any extra code from the carberra tutorial
+- Comment on everything for others using this code.
+- replace static categories with tags
+  - Filter by python equivalent of str_detect
+
+-add text position metadata to pictures
+
+-Add two line function: ^how do you find will smith in the snow _look for fresh prints
+
+-Add text comparison to 'cat doesn't exist' error
+	-'I don't have 'hunger'. Did you mean 'hungry'?'
+	-attach multiple names to categories? Like hunger/hungry?
+
+-Replace message limit with text shrinker-inater
+
+-Create system for user-uploaded pics and categories

@@ -20,7 +20,7 @@ class Bot(lightbulb.BotApp):
             token = f.read().strip()
 
         super().__init__(
-            prefix = "-",
+            prefix = "toast.",
             token = token,
             intents = hikari.Intents.ALL,
         )
@@ -35,7 +35,7 @@ class Bot(lightbulb.BotApp):
         
         super().run(
             activity = hikari.Activity(
-                name = f"-help | Version {__VERSION__}",
+                name = f"toast.help | /meme",
                 type = hikari.ActivityType.WATCHING)
         )
 
@@ -49,13 +49,13 @@ class Bot(lightbulb.BotApp):
 
         # YO Not guaranteed to be cached in time.
         self.stdout_channel = await self.rest.fetch_channel(STDOUT_CHANNEL_ID)
-        await self.stdout_channel.send(f"Testing v{__VERSION__} now online.")
+        await self.stdout_channel.send(f"v{__VERSION__} now online.")
         logging.info("BOT READY")
 
 
     async def on_stopping(self, event: hikari.StoppingEvent) -> None:
         # YO Message doesn't always send for some reason, but bot shuts down like it should
-        await self.stdout_channel.send(f"Testing v{__VERSION__} is shutting down.")
+        await self.stdout_channel.send(f"v{__VERSION__} is shutting down.")
         self.scheduler.shutdown()
 
 

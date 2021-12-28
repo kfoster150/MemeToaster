@@ -28,7 +28,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         # Create embed object
         embed = hikari.Embed(title = 'HOW TO USE',
         description = """
-1. Type `/meme` in the message bar, then hit TAB 3x
+1. Type `/meme` in the message bar, then hit TAB
 2. Type the name of a valid category, then hit TAB 3x
 3. Type your message (under 125 chars), then hit ENTER
 """,

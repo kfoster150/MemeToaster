@@ -1,6 +1,6 @@
 import hikari
 import lightbulb
-import os, random, re
+import os, random, string
 from io import BytesIO
 import logging
 
@@ -55,7 +55,7 @@ async def command_stats(ctx: lightbulb.Context) -> None:
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
     caption = ctx.options.caption
-    category = ctx.options.category.lower()
+    category = ctx.options.category.translate(str.maketrans('', '', string.punctuation)).lower()
     
     if len(caption) > 125:
         await ctx.respond("""

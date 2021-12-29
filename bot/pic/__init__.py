@@ -24,8 +24,7 @@ def render(imagePath, message) -> Image:
 
     # Load image
     img = Image.open(imagePath).convert("RGBA")
-
-    # Create a scaler so that the size is about 500 x 500 pixels
+    
     w, h = img.size
     font_size = round((w + h)/20)
     stroke_width = round((w + h)/500)

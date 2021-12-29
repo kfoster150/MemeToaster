@@ -1,5 +1,3 @@
-- Publish Bot to AWS/Discord
-
 - Add file size check # YO Tried replicating the file size check from the last bot, but lightbulb doesn't like it for some reason
 
 WATCH CARBERRA'S VIDEO ON PILLOW

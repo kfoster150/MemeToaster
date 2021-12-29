@@ -28,19 +28,18 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         # Create embed object
         embed = hikari.Embed(title = 'HOW TO USE',
         description = """
-1. Type `/meme` in the message bar, then hit TAB
-2. Type the name of a valid category, then hit TAB 3x
-3. Type your message (under 125 chars), then hit ENTER
+1. Type `/meme` in the message bar
+2. Select `category`, and type a valid category
+3. Select `message`, and type your message
 """,
                         color = 0xFF0000)
-        embed.set_thumbnail('./data/images/example.png')
 
         embed.add_field(name = 'CATEGORIES', value = cats_embed[0],inline = True)
         embed.add_field(name = '\u200b', value = cats_embed[1], inline = True)
         embed.add_field(name = '\u200b', value = cats_embed[2], inline = True)
 
         embed.add_field(name = '\u200b', value = """
-Type `toast.stats` for more details
+Type `/stats` for more details
 Feedback? Picture/Category Suggestions?
 Email: `DiscordMemeToaster@gmail.com`""")
 

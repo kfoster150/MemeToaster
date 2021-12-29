@@ -28,6 +28,7 @@ def render(imagePath, message) -> Image:
     # Create a scaler so that the size is about 500 x 500 pixels
     w, h = img.size
     font_size = round((w + h)/20)
+    stroke_width = round((w + h)/500)
 
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype('./data/fonts/arial.ttf', font_size)
@@ -49,7 +50,7 @@ def render(imagePath, message) -> Image:
         offset = h - t_height - margin
 
     for line in message_wrapped:
-        draw.text((margin, offset), line, font = font, stroke_width=2, stroke_fill ='black')
+        draw.text((margin, offset), line, font = font, stroke_width=stroke_width, stroke_fill ='black')
         offset += font.getsize(line)[1]
 
     # Add watermark

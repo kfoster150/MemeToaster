@@ -1,15 +1,7 @@
-aiodns
+wheel
 apscheduler
-black
-Brotli
-#cchardet
-#ciso8601
 hikari
 hikari-lightbulb
 hikari-tanjun
-mypy
 pillow
 uvloop
-wheel
-
-# YO Couldn't install cchardet or ciso8601.

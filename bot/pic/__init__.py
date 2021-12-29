@@ -30,6 +30,7 @@ def render(imagePath, message) -> Image:
     # Font line width ~= (font size)/25
     w, h = img.size
     font_size = round((w + h)/20)
+
     stroke_width = round(font_size/25)
 
     draw = ImageDraw.Draw(img)

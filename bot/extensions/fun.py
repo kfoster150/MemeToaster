@@ -88,51 +88,6 @@ Use toast.help or toast.stats for a list of categories
             await ctx.edit_last_response("Toasting meme... DING")
 
 
-# @plugin.command
-# @lightbulb.option(name = "category_caption", description = "picture & category", type = str, required = True, 
-#                 modifier = lightbulb.commands.OptionModifier.CONSUME_REST)
-# @lightbulb.command(name = "meme", description = "Put a picture category and caption in the toaster", guilds = current_guilds)
-# @lightbulb.implements(lightbulb.PrefixCommand)
-# async def command_prefix_meme(ctx: lightbulb.Context) -> None:
-#     logging.info(ctx.options.category_caption)
-#     category = re.match(r"\w+", ctx.options.category_caption)[0]
-#     logging.info(f"category: {category}")
-#     caption = re.sub(category, "", ctx.options.category_caption).strip()
-#     logging.info(f"caption: {caption}")
-    
-
-    
-#     if len(caption) > 125:
-#         await ctx.respond("""
-# It's a meme, not your master's thesis. Your caption has to be 125 characters or less.""")
-    
-#     else:
-#         categoryPath = os.path.join(inputImageDir, category)
-
-#         if not category in categories:
-#             await ctx.respond(f"""
-# Sorry, I don't have any pictures for '{category}'
-# Use toast.help or toast.stats for a list of categories
-# """)
-
-#         else:
-#             await ctx.respond("Toasting meme...")
-
-#             images = os.listdir(categoryPath)
-#             imageChoice = random.choice(images)
-#             imagePath = os.path.join(categoryPath, imageChoice)
-
-#             channel = ctx.get_channel()
- 
-#             with BytesIO() as imageBinary:
-#                 render(imagePath, caption).save(imageBinary, 'PNG')
-
-#                 imageBinary.seek(0)
-#                 await channel.send(imageBinary)
-
-#             await ctx.edit_last_response("Toasting meme... DING")
-
-
 def load(bot: Bot):
     bot.add_plugin(plugin)
 

@@ -1,15 +1,3 @@
-# MVP
-
-- Get the thing
-    - User invokes the bot, provides a category, and writes a message
-    - Bot is invoked
-    - Bot randomly chooses a picture based on the category
-    - Bot attaches the caption to the picture.
-    - Bot sends the picture to the server
-
-- Create Help command (customize for slash commands)
-- create stats command
-
 - Add file size check # YO Tried replicating the file size check from the last bot, but lightbulb doesn't like it for some reason
 
 WATCH CARBERRA'S VIDEO ON PILLOW
@@ -30,8 +18,6 @@ WATCH CARBERRA'S VIDEO ON PILLOW
 # Extra Extra
 - Remove any extra code from the carberra tutorial
 - Comment on everything for others using this code.
-- replace static categories with tags
-  - Filter by python equivalent of str_detect
 
 -add text position metadata to pictures
 

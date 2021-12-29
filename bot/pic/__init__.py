@@ -24,10 +24,13 @@ def render(imagePath, caption) -> Image:
 
     # Load image
     img = Image.open(imagePath).convert("RGBA")
-    
+
+    # Text scaling:
+    # Font size ~= (image width + image height)/20
+    # Font line width ~= (font size)/25
     w, h = img.size
     font_size = round((w + h)/20)
-    stroke_width = round((w + h)/500)
+    stroke_width = round(font_size/25)
 
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype('./data/fonts/arial.ttf', font_size)

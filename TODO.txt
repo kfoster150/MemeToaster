@@ -5,10 +5,8 @@ WATCH CARBERRA'S VIDEO ON PILLOW
 # Extra
 - Discord Reload Shortcut
 - NSFW on and off options
-- Scale text outline, just like the text size
 - Include both slash and prefix commands
 - rather than folders, move to sqlite db with cat/link pairs (host pics elsewhere?)
-- Make font outline size adjust with picture size (just like base font size)
 - (properly) modify the help command
 - Copyright/License?
 - 'legitimize' the bot. Maintain github, info page, author info, etc

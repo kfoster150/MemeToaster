@@ -1,10 +1,8 @@
 import logging
-from pathlib import Path
 
 import hikari
 import lightbulb
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from pytz import utc
 
 __VERSION__ = '0.2.0'
 
@@ -20,7 +18,7 @@ class Bot(lightbulb.BotApp):
             token = f.read().strip()
 
         super().__init__(
-            prefix = "-",
+            prefix = "toast.",
             token = token,
             intents = hikari.Intents.ALL,
         )
@@ -31,11 +29,10 @@ class Bot(lightbulb.BotApp):
         self.event_manager.subscribe(hikari.StartingEvent, self.on_starting)
         self.event_manager.subscribe(hikari.StartedEvent, self.on_started)
         self.event_manager.subscribe(hikari.StoppingEvent, self.on_stopping)
-        self.event_manager.subscribe(hikari.MessageCreateEvent, self.on_message_create)
         
         super().run(
             activity = hikari.Activity(
-                name = f"-help | Version {__VERSION__}",
+                name = f"toast.help | /meme",
                 type = hikari.ActivityType.WATCHING)
         )
 
@@ -49,18 +46,11 @@ class Bot(lightbulb.BotApp):
 
         # YO Not guaranteed to be cached in time.
         self.stdout_channel = await self.rest.fetch_channel(STDOUT_CHANNEL_ID)
-        await self.stdout_channel.send(f"Testing v{__VERSION__} now online.")
+        await self.stdout_channel.send(f"v{__VERSION__} now online.")
         logging.info("BOT READY")
 
 
     async def on_stopping(self, event: hikari.StoppingEvent) -> None:
         # YO Message doesn't always send for some reason, but bot shuts down like it should
-        await self.stdout_channel.send(f"Testing v{__VERSION__} is shutting down.")
+        await self.stdout_channel.send(f"v{__VERSION__} is shutting down.")
         self.scheduler.shutdown()
-
-
-    async def on_message_create(self, event: hikari.MessageCreateEvent) -> None:
-        if isinstance(event.message.channel_id, hikari.DMChannel):
-            return
-
-        logging.info(f"Message by {event.message.member}: {event.message.content}")

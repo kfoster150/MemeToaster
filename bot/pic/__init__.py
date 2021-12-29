@@ -20,7 +20,7 @@ def wrap_text(text, font, max_width):
 
     return(lines)
 
-def render(imagePath, message) -> Image:
+def render(imagePath, caption) -> Image:
 
     # Load image
     img = Image.open(imagePath).convert("RGBA")
@@ -35,11 +35,11 @@ def render(imagePath, message) -> Image:
     margin = round(w/25)
     w_limit = round(w - margin*2)
 
-    message_wrapped = wrap_text(message, font, w_limit)
+    caption_wrapped = wrap_text(caption, font, w_limit)
 
     heights = []
-    for i in range(0, len(message_wrapped)):
-        heights.append( font.getsize(message_wrapped[i])[1] )
+    for i in range(0, len(caption_wrapped)):
+        heights.append( font.getsize(caption_wrapped[i])[1] )
 
     t_height = sum(heights)
 
@@ -48,7 +48,7 @@ def render(imagePath, message) -> Image:
     else:
         offset = h - t_height - margin
 
-    for line in message_wrapped:
+    for line in caption_wrapped:
         draw.text((margin, offset), line, font = font, stroke_width=stroke_width, stroke_fill ='black')
         offset += font.getsize(line)[1]
 

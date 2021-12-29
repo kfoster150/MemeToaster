@@ -1,11 +1,14 @@
 import hikari
 import lightbulb
-import logging
 import os, random
 from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
+
+current_guilds = [833477250841837598, # Tutorial
+                  328380613411209218, # Orbiters United
+                  ]
 
 inputImageDir = './data/images/input'
 categories = os.listdir(inputImageDir)
@@ -14,7 +17,7 @@ categories.sort()
 plugin = lightbulb.Plugin("Functions")
 
 @plugin.command
-@lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", aliases = ("stats",), guilds = [833477250841837598])
+@lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
 
@@ -44,9 +47,9 @@ async def command_stats(ctx: lightbulb.Context) -> None:
 
 
 @plugin.command
-@lightbulb.option(name = "message", description = "message to send", type = str, default = "still testing")
-@lightbulb.option(name = "category", description = "picture category", type = str, default = "test")
-@lightbulb.command(name = "meme", description = "Do a meme.", aliases = ("pic","emote",), guilds = [833477250841837598])
+@lightbulb.option(name = "message", description = "message to send", type = str, default = "")
+@lightbulb.option(name = "category", description = "picture category", type = str, required = True)
+@lightbulb.command(name = "meme", description = "Do a meme.", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
     message = ctx.options.message

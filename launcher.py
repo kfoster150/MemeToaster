@@ -18,9 +18,6 @@ invite links
 Admin:
 https://discord.com/api/oauth2/authorize?client_id=920060661294309378&permissions=8&scope=bot%20applications.commands
 
-Individual choices:
-https://discord.com/api/oauth2/authorize?client_id=920060661294309378&permissions=2147609664&scope=bot%20applications.commands
-
 hikari docs:
 https://www.hikari-py.dev/hikari/index.html
 

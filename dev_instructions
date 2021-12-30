@@ -1,0 +1,9 @@
+To Dev:
+    Change token to MemeToasterDev
+    Remove any guilds besides #Tutorial
+    Change prefix to '-' (to avoid confliction)
+
+To Dev:
+    Change token to MemeToaster2
+    Add Extra guilds back
+    Change prefix back to '.toast' (to avoid confliction)

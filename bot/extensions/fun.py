@@ -54,7 +54,7 @@ async def command_stats(ctx: lightbulb.Context) -> None:
 @lightbulb.command(name = "meme", description = "Put a picture category and caption in the toaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
-    caption = ctx.options.caption
+    caption = ctx.options.caption.strip()
     category = ctx.options.category.translate(str.maketrans('', '', string.punctuation)).lower()
     
     if len(caption) > 125:

@@ -68,5 +68,6 @@ def render(imagePath, caption) -> Image:
     wm_resize = wm.resize((x,y))
 
     img.alpha_composite(wm_resize, dest = (w - x, 0))
+    img = img.convert("RGB")
 
     return(img)

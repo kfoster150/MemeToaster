@@ -8,7 +8,7 @@ from bot import Bot
 from bot.pic import render
 
 current_guilds = [833477250841837598, # Tutorial
-                  328380613411209218, # Orbiters United
+                  #328380613411209218, # Orbiters United
                   ]
 
 inputImageDir = './data/images/input'
@@ -80,7 +80,7 @@ Use toast.help or toast.stats for a list of categories
             channel = ctx.get_channel()
  
             with BytesIO() as imageBinary:
-                render(imagePath, caption).save(imageBinary, 'PNG')
+                render(imagePath, caption).save(imageBinary, 'JPEG')
 
                 imageBinary.seek(0)
                 await channel.send(imageBinary)

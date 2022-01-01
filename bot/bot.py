@@ -7,16 +7,18 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 __VERSION__ = '0.2.0'
 
-HOME_GUILD_ID = 833477250841837598
-STDOUT_CHANNEL_ID = 872682916788973638
+HOME_GUILD_ID = os.environ['HOME_GUILD_ID']
+STDOUT_CHANNEL_ID = os.environ['STDOUT_CHANNEL_ID']
+
+token = os.environ['MT2_SECRET']
 
 class Bot(lightbulb.BotApp):
     def __init__(self) -> None:
         self.scheduler = AsyncIOScheduler()
         self.scheduler.configure(timezone = 'utc')
 
-        with open("./secrets/token", mode = "r", encoding = "utf-8") as f:
-            token = f.read().strip()
+        # with open("./secrets/token", mode = "r", encoding = "utf-8") as f:
+        #     token = f.read().strip()
 
         super().__init__(
             prefix = "toast.",
@@ -49,7 +51,6 @@ class Bot(lightbulb.BotApp):
         self.stdout_channel = await self.rest.fetch_channel(STDOUT_CHANNEL_ID)
         await self.stdout_channel.send(f"v{__VERSION__} now online.")
         logging.info("BOT READY")
-        logging.info("TESTVAR: " + os.environ['TESTVAR'])
 
 
     async def on_stopping(self, event: hikari.StoppingEvent) -> None:

@@ -9,7 +9,7 @@ import logging
 from bot import Bot
 from bot.pic import render
 
-current_guilds = [833477250841837598] # Tutorial
+current_guilds = [os.environ['HOME_GUILD_ID']] # Tutorial
 
 inputImageDir = './data/images/db'
 params = dict(dbname = 'dev', user = 'dev', 
@@ -17,9 +17,6 @@ params = dict(dbname = 'dev', user = 'dev',
             host = 'localhost', port = '5432')
 con = connect(**params)
 tags = pd.read_sql("SELECT tag FROM tag;", con = con).values
-
-
-
 
 plugin = lightbulb.Plugin("Functions")
 

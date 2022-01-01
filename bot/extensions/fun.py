@@ -7,8 +7,8 @@ import logging
 from bot import Bot
 from bot.pic import render
 
-current_guilds = [833477250841837598, # Tutorial
-                  328380613411209218, # Orbiters United
+current_guilds = [os.environ['HOME_GUILD_ID'], # Tutorial
+                  os.environ['ORBITERS_GUILD_ID'], # Orbiters United
                   ]
 
 inputImageDir = './data/images/input'

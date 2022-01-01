@@ -18,7 +18,7 @@ class Bot(lightbulb.BotApp):
             token = f.read().strip()
 
         super().__init__(
-            prefix = "toast.",
+            prefix = ".toast",
             token = token,
             intents = hikari.Intents.ALL,
         )

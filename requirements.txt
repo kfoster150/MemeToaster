@@ -4,4 +4,5 @@ hikari
 hikari-lightbulb
 hikari-tanjun
 pillow
+psycopg2
 uvloop

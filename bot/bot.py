@@ -1,4 +1,5 @@
 import logging
+import os
 
 import hikari
 import lightbulb
@@ -48,6 +49,7 @@ class Bot(lightbulb.BotApp):
         self.stdout_channel = await self.rest.fetch_channel(STDOUT_CHANNEL_ID)
         await self.stdout_channel.send(f"v{__VERSION__} now online.")
         logging.info("BOT READY")
+        logging.info("TESTVAR: " + os.environ['TESTVAR'])
 
 
     async def on_stopping(self, event: hikari.StoppingEvent) -> None:

@@ -31,7 +31,7 @@ inputImageDir = './data/images/db'
                     modifier = lightbulb.commands.OptionModifier.CONSUME_REST)
 @lightbulb.option(name = "tag", description = "picture tag", type = str, required = True)
 @lightbulb.command(name = "dbmeme", description = "Put a picture tag and caption in the toaster", guilds = current_guilds)
-@lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
+@lightbulb.implements(lightbulb.PrefixCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
     caption = ctx.options.caption.strip()
     tag = ctx.options.tag.translate(str.maketrans('', '', string.punctuation)).lower()
@@ -61,8 +61,6 @@ WHERE tag.tag = '{tag}';
 """
 
             images = pd.read_sql(query_by_tag, con = con).filename.values
-            logging.info(type(images))
-            logging.info(images)
             imageChoice = random.choice(images)
             imagePath = os.path.join(inputImageDir, imageChoice)
 

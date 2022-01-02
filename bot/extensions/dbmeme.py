@@ -1,8 +1,9 @@
-import hikari
+#import hikari
 import lightbulb
 import os, random, string
 import pandas as pd
 from psycopg2 import connect
+from urllib.parse import urlparse
 from io import BytesIO
 import logging
 
@@ -11,14 +12,19 @@ from bot.pic import render
 
 current_guilds = [os.environ['HOME_GUILD_ID']] # Tutorial
 
-inputImageDir = './data/images/db'
-params = dict(dbname = 'dev', user = 'dev', 
-            password = 'memetoaster', 
-            host = 'localhost', port = '5432')
-con = connect(**params)
+url = urlparse(os.environ['DATABASE_URL'])
+
+con = connect(
+    dbname = url.path[1:],
+    user = url.username,
+    password = url.password,
+    host = url.hostname,
+    port = url.port
+)
 tags = pd.read_sql("SELECT tag FROM tag;", con = con).values
 
 plugin = lightbulb.Plugin("Functions")
+inputImageDir = './data/images/db'
 
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",

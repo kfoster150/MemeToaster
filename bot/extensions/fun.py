@@ -2,7 +2,7 @@ import hikari
 import lightbulb
 import os, random, string
 from io import BytesIO
-import logging
+#import logging
 
 from bot import Bot
 from bot.pic import render

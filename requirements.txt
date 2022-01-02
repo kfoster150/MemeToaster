@@ -3,6 +3,7 @@ apscheduler
 hikari
 hikari-lightbulb
 hikari-tanjun
+pandas
 pillow
 psycopg2
 uvloop

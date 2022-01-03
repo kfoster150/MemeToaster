@@ -26,7 +26,7 @@ SELECT COUNT(tf.filename_id)
 FROM tag AS tg
 LEFT JOIN tag_filename AS tf
 ON tg.id = tf.tag_id
-WHERE tg.tag = '%s';"""
+WHERE tg.tag = '%s'"""
 
     # Create list of tags with number of pictures
     tags_list = []

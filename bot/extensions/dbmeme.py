@@ -39,6 +39,9 @@ async def command_db_help(ctx = lightbulb.context) -> None:
             tags_list[counter % 3].append(tag)
             counter += 1
 
+        logging.info("tags_list[0]:", str(tags_list[0]))
+        logging.info(type(tags_list[0]))
+
         tags_embed = ["\n".join(tags_list[0]),
                       "\n".join(tags_list[1]),
                       "\n".join(tags_list[2])]

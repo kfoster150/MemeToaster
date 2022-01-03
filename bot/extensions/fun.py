@@ -28,7 +28,7 @@ LEFT JOIN tag_filename AS tf
 ON tg.id = tf.tag_id
 WHERE tg.tag = """
 
-    # Create list of categories with number of files
+    # Create list of tags with number of pictures
     tags_list = []
     num_list = []
     for tag in tags:
@@ -44,9 +44,9 @@ WHERE tg.tag = """
     # Create embed object
     embed = hikari.Embed(color = 0xFF0000)
 
-    embed.add_field(name = 'Number of categories', value = str(num_tags))
+    embed.add_field(name = 'Number of tags', value = str(num_tags))
     embed.add_field(name = 'Total number of pictures', value = str(sum(num_list)))
-    embed.add_field(name = '\u200b', value = "Number of pictures per category:", inline = False)
+    embed.add_field(name = '\u200b', value = "Number of pictures per tag:", inline = False)
 
     for name, value in tags_list:
         embed.add_field(name = name, value = value, inline = False)

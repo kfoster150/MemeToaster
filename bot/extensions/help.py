@@ -27,8 +27,8 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         embed = hikari.Embed(title = 'HOW TO USE',
         description = """
 1. Type `/meme` in the message bar
-2. Select `category`, and type a valid category
-3. Select `message`, and type your message
+2. Select `tag`, and type a valid tag
+3. Select `caption`, and type your caption
 """,
                         color = 0xFF0000)
 
@@ -38,7 +38,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
 
         embed.add_field(name = '\u200b', value = """
 Type `/stats` for more details
-Feedback? Picture/Category Suggestions?
+Feedback? Picture/Tag Suggestions?
 Email: `DiscordMemeToaster@gmail.com`""")
 
         # send embed object

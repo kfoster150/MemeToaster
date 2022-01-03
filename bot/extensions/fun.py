@@ -2,13 +2,13 @@ import hikari
 import lightbulb
 import os, random, string
 from io import BytesIO
-import logging
+#import logging
 
 from bot import Bot
 from bot.pic import render
 
-current_guilds = [833477250841837598, # Tutorial
-                  #328380613411209218, # Orbiters United
+current_guilds = [os.environ['HOME_GUILD_ID'], # Tutorial
+                  os.environ['ORBITERS_GUILD_ID'], # Orbiters United
                   ]
 
 inputImageDir = './data/images/input'
@@ -62,7 +62,6 @@ async def command_meme(ctx: lightbulb.Context) -> None:
 It's a meme, not your master's thesis. Your caption has to be 125 characters or less.""")
     
     else:
-        categoryPath = os.path.join(inputImageDir, category)
 
         if not category in categories:
             await ctx.respond(f"""
@@ -72,6 +71,8 @@ Use toast.help or toast.stats for a list of categories
 
         else:
             await ctx.respond("Toasting meme...")
+            
+            categoryPath = os.path.join(inputImageDir, category)
 
             images = os.listdir(categoryPath)
             imageChoice = random.choice(images)

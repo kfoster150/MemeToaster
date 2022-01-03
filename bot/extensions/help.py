@@ -1,29 +1,27 @@
 import hikari
 import lightbulb
-import logging
 import os
+import pandas as pd
 
 from bot import Bot
-
-inputImageDir = './data/images/input'
-categories = os.listdir(inputImageDir)
-categories.sort()
+from data import mt_sql_tags
 
 class ToasterHelp(lightbulb.BaseHelpCommand):
     async def send_bot_help(self, context):
         # Override this method to change the message sent when the help command
         # is run without any arguments.
 
-        # Create list of categories with number of files
-        cats_list = [[],[],[]]
+        tags = mt_sql_tags()
+
+        tags_list = [[],[],[]]
         counter = 0
-        for c in categories:
-            cats_list[counter % 3].append(c)
+        for tag in tags:
+            tags_list[counter % 3].append(tag)
             counter += 1
 
-        cats_embed = ["\n".join(cats_list[0]),
-                      "\n".join(cats_list[1]),
-                      "\n".join(cats_list[2])]
+        tags_embed = ["\n".join(tags_list[0]),
+                      "\n".join(tags_list[1]),
+                      "\n".join(tags_list[2])]
 
         # Create embed object
         embed = hikari.Embed(title = 'HOW TO USE',
@@ -34,9 +32,9 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
 """,
                         color = 0xFF0000)
 
-        embed.add_field(name = 'CATEGORIES', value = cats_embed[0],inline = True)
-        embed.add_field(name = '\u200b', value = cats_embed[1], inline = True)
-        embed.add_field(name = '\u200b', value = cats_embed[2], inline = True)
+        embed.add_field(name = 'CATEGORIES', value = tags_embed[0],inline = True)
+        embed.add_field(name = '\u200b', value = tags_embed[1], inline = True)
+        embed.add_field(name = '\u200b', value = tags_embed[2], inline = True)
 
         embed.add_field(name = '\u200b', value = """
 Type `/stats` for more details

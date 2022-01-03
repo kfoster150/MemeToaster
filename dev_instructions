@@ -1,9 +1,13 @@
 To Dev:
-    Change token to MemeToasterDev
-    Remove any guilds besides #Tutorial
-    Change prefix to '-' (to avoid confliction)
+    Change secrets/token to MemeToasterDev
+    OTI1ODg3NzY3NDc1NTMxODc4.YczqLQ.b8QtKBoIE9t02aSA9ijjRh32af8
+
+    Remove any guilds besides #Tutorial from bot/extensions/fun.py
+    Change prefix to '-' (to avoid confliction) in bot/bot.py
 
 To Dev:
     Change token to MemeToaster2
+    OTIwMDYwNjYxMjk0MzA5Mzc4.Ybe3Qw.CannyO1S7o6eiX5NF6xuNGYa5cs
+
     Add Extra guilds back
-    Change prefix back to '.toast' (to avoid confliction)
+    Change prefix back to 'toast.'

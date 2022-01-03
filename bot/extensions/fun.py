@@ -33,7 +33,7 @@ WHERE tg.tag = '%s';"""
     num_list = []
     for tag in tags:
         with mt_sql_connect().cursor() as cur:
-            cur.execute(query_str, [tag])
+            cur.execute(query_str, (tag,))
             num_pics = cur.fetchone()[0]
         pics = str(num_pics) + ' pictures'
         tags_list.append((tag, pics))

@@ -24,7 +24,7 @@ con = connect(
     host = url.hostname,
     port = url.port
 )
-tags = pd.read_sql("SELECT tag FROM tag;", con = con).values
+tags = pd.read_sql("SELECT tag FROM tag;", con = con)['tag']
 
 plugin = lightbulb.Plugin("Functions")
 inputImageDir = './data/images/db'
@@ -85,7 +85,6 @@ WHERE tg.tag = """
     tags_list = []
     num_list = []
     for tag in tags:
-        tag = tag[0]
         with con.cursor() as cur:
             cur.execute(query_str + f"'{tag}'" + ";")
             num_pics = cur.fetchone()[0]

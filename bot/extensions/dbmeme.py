@@ -12,7 +12,7 @@ from bot.pic import render
 
 current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
                   os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
-                  ] 
+                  ]
 
 url = urlparse(os.environ['DATABASE_URL'])
 
@@ -45,7 +45,7 @@ WHERE tg.tag = """
     num_list = []
     for tag in tags:
         with con.cursor() as cur:
-            cur.execute(query_str + f"'{tag}'" + ";")
+            cur.execute(query_str + f"'{tag[0]}'" + ";")
             num_pics = cur.fetchone()
         pics = str(num_pics) + ' pictures'
         tags_list.append((tag, pics))

@@ -47,9 +47,13 @@ WHERE tg.tag = """
         with con.cursor() as cur:
             cur.execute(query_str + f"'{tag[0]}'" + ";")
             num_pics = cur.fetchone()
+            logging.info("num_pics", num_pics)
+            logging.info(type(num_pics))
         pics = str(num_pics) + ' pictures'
         tags_list.append((tag, pics))
         num_list.append(num_pics)
+    logging.info(num_list)
+    logging.info(type(num_list))
 
     num_tags = len(tags)
 

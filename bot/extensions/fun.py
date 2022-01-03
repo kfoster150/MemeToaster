@@ -85,7 +85,7 @@ SELECT filename FROM filename AS f
 	ON f.id = tf.filename_id
     	LEFT JOIN tag
         ON tf.tag_id = tag.id
-WHERE tg.tag = %s"""
+WHERE tag.tag = %s"""
 
             images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)

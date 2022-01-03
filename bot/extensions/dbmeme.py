@@ -46,7 +46,7 @@ WHERE tg.tag = """
     for tag in tags:
         with con.cursor() as cur:
             cur.execute(query_str + f"'{tag[0]}'" + ";")
-            num_pics = cur.fetchone()
+            num_pics = cur.fetchone()[0]
             logging.info("num_pics", num_pics)
             logging.info(type(num_pics))
         pics = str(num_pics) + ' pictures'

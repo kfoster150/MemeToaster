@@ -1,6 +1,7 @@
 import hikari
 import lightbulb
 import os, random, string
+from lightbulb.errors import LightbulbError
 import pandas as pd
 from psycopg2 import connect
 from urllib.parse import urlparse
@@ -27,6 +28,43 @@ tags = pd.read_sql("SELECT tag FROM tag;", con = con).values
 
 plugin = lightbulb.Plugin("Functions")
 inputImageDir = './data/images/db'
+
+@plugin.command
+@lightbulb.command(name = "dbhelp", description = "Get help with MemeToaster", guilds = current_guilds)
+@lightbulb.implements(lightbulb.PrefixCommand)
+async def command_db_help(ctx = lightbulb.context) -> None:
+        tags_list = [[],[],[]]
+        counter = 0
+        for tag in tags:
+            tags_list[counter % 3].append(tag)
+            counter += 1
+
+        tags_embed = ["\n".join(tags_list[0]),
+                      "\n".join(tags_list[1]),
+                      "\n".join(tags_list[2])]
+
+        # Create embed object
+        embed = hikari.Embed(title = 'HOW TO USE',
+        description = """
+1. Type `/meme` in the message bar
+2. Select `category`, and type a valid category
+3. Select `message`, and type your message
+""",
+                        color = 0xFF0000)
+
+        embed.add_field(name = 'CATEGORIES', value = tags_embed[0],inline = True)
+        embed.add_field(name = '\u200b', value = tags_embed[1], inline = True)
+        embed.add_field(name = '\u200b', value = tags_embed[2], inline = True)
+
+        embed.add_field(name = '\u200b', value = """
+Type `/stats` for more details
+Feedback? Picture/Category Suggestions?
+Email: `DiscordMemeToaster@gmail.com`""")
+
+        # send embed object
+        await ctx.respond(embed = embed)
+
+
 
 @plugin.command
 @lightbulb.command(name = "dbstats", description = "Show stats about the MemeToaster", guilds = current_guilds)

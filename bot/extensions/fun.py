@@ -79,16 +79,15 @@ Use toast.help or toast.stats for a list of categories
         else:
             await ctx.respond("Toasting meme...")
 
-            query_by_tag = f"""
+            query_by_tag = """
 SELECT filename FROM filename AS f
 	LEFT JOIN tag_filename AS tf
 	ON f.id = tf.filename_id
-    	LEFT JOIN tag
+    	LEFT JOIN tag AS tg
         ON tf.tag_id = tag.id
-WHERE tag.tag = '{tag}';
-"""
+WHERE tg.tag = %s"""
 
-            images = pd.read_sql(query_by_tag, con = mt_sql_connect()).filename.values
+            images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)
             imagePath = os.path.join('./data/images/db', imageChoice)
 

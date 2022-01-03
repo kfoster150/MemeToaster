@@ -17,6 +17,6 @@ def mt_sql_connect():
 
 def mt_sql_tags():
     tags = read_sql("SELECT tag FROM tag;",
-                    con = mt_sql_connect())['tag']
+                    con = mt_sql_connect())['tag'].to_list()
 
     return(tags)

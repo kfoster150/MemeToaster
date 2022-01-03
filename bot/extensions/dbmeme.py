@@ -63,8 +63,6 @@ WHERE tg.tag = """
 async def command_meme(ctx: lightbulb.Context) -> None:
     caption = ctx.options.caption.strip()
     tag = ctx.options.tag.translate(str.maketrans('', '', string.punctuation)).lower()
-
-    tags = mt_sql_tags()
     
     if len(caption) > 125:
         await ctx.respond("""
@@ -72,7 +70,7 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
     
     else:
 
-        if not tag in tags:
+        if not tag in mt_sql_tags():
             await ctx.respond(f"""
 Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.stats for a list of categories

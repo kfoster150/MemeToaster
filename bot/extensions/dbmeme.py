@@ -1,74 +1,25 @@
 import hikari
 import lightbulb
 import os, random, string
-from lightbulb.errors import LightbulbError
 import pandas as pd
-from psycopg2 import connect
-from urllib.parse import urlparse
 from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
+from data import mt_sql_connect, mt_sql_tags
 
 current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
                   os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
                   ]
 
-url = urlparse(os.environ['DATABASE_URL'])
-
-con = connect(
-    dbname = url.path[1:],
-    user = url.username,
-    password = url.password,
-    host = url.hostname,
-    port = url.port
-)
-tags = pd.read_sql("SELECT tag FROM tag;", con = con)['tag']
-
 plugin = lightbulb.Plugin("Functions")
-inputImageDir = './data/images/db'
-
-@plugin.command
-@lightbulb.command(name = "dbhelp", description = "Get help with MemeToaster", guilds = current_guilds)
-@lightbulb.implements(lightbulb.PrefixCommand)
-async def command_db_help(ctx = lightbulb.context) -> None:
-        tags_list = [[],[],[]]
-        counter = 0
-        for tag in tags:
-            tags_list[counter % 3].append(tag)
-            counter += 1
-
-        tags_embed = ["\n".join(tags_list[0]),
-                      "\n".join(tags_list[1]),
-                      "\n".join(tags_list[2])]
-
-        # Create embed object
-        embed = hikari.Embed(title = 'HOW TO USE',
-        description = """
-1. Type `/meme` in the message bar
-2. Select `category`, and type a valid category
-3. Select `message`, and type your message
-""",
-                        color = 0xFF0000)
-
-        embed.add_field(name = 'CATEGORIES', value = tags_embed[0],inline = True)
-        embed.add_field(name = '\u200b', value = tags_embed[1], inline = True)
-        embed.add_field(name = '\u200b', value = tags_embed[2], inline = True)
-
-        embed.add_field(name = '\u200b', value = """
-Type `/stats` for more details
-Feedback? Picture/Category Suggestions?
-Email: `DiscordMemeToaster@gmail.com`""")
-
-        # send embed object
-        await ctx.respond(embed = embed)
-
-
 
 @plugin.command
 @lightbulb.command(name = "dbstats", description = "Show stats about the MemeToaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
+
+    tags = mt_sql_tags()
 
     query_str = f"""
 SELECT COUNT(tf.filename_id)
@@ -81,7 +32,7 @@ WHERE tg.tag = """
     tags_list = []
     num_list = []
     for tag in tags:
-        with con.cursor() as cur:
+        with mt_sql_connect().cursor() as cur:
             cur.execute(query_str + f"'{tag}'" + ";")
             num_pics = cur.fetchone()[0]
         pics = str(num_pics) + ' pictures'
@@ -112,6 +63,8 @@ WHERE tg.tag = """
 async def command_meme(ctx: lightbulb.Context) -> None:
     caption = ctx.options.caption.strip()
     tag = ctx.options.tag.translate(str.maketrans('', '', string.punctuation)).lower()
+
+    tags = mt_sql_tags()
     
     if len(caption) > 125:
         await ctx.respond("""
@@ -137,9 +90,9 @@ SELECT filename FROM filename AS f
 WHERE tag.tag = '{tag}';
 """
 
-            images = pd.read_sql(query_by_tag, con = con).filename.values
+            images = pd.read_sql(query_by_tag, con = mt_sql_connect()).filename.values
             imageChoice = random.choice(images)
-            imagePath = os.path.join(inputImageDir, imageChoice)
+            imagePath = os.path.join('./data/images/db', imageChoice)
 
             channel = ctx.get_channel()
  

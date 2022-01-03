@@ -21,19 +21,19 @@ async def command_stats(ctx: lightbulb.Context) -> None:
 
     tags = mt_sql_tags()
 
-    query_str = f"""
+    query_str = """
 SELECT COUNT(tf.filename_id)
 FROM tag AS tg
 LEFT JOIN tag_filename AS tf
 ON tg.id = tf.tag_id
-WHERE tg.tag = """
+WHERE tg.tag = '%s';"""
 
     # Create list of tags with number of pictures
     tags_list = []
     num_list = []
     for tag in tags:
         with mt_sql_connect().cursor() as cur:
-            cur.execute(query_str + f"'{tag}'" + ";")
+            cur.execute(query_str, [tag])
             num_pics = cur.fetchone()[0]
         pics = str(num_pics) + ' pictures'
         tags_list.append((tag, pics))

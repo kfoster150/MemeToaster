@@ -23,10 +23,10 @@ async def command_stats(ctx: lightbulb.Context) -> None:
 
     query_str = """
 SELECT COUNT(tf.filename_id)
-FROM tag AS tg
+FROM tag
 LEFT JOIN tag_filename AS tf
-ON tg.id = tf.tag_id
-WHERE tg.tag = %s"""
+ON tag.id = tf.tag_id
+WHERE tag.tag = %s"""
 
     # Create list of tags with number of pictures
     tags_list = []
@@ -83,7 +83,7 @@ Use toast.help or toast.stats for a list of categories
 SELECT filename FROM filename AS f
 	LEFT JOIN tag_filename AS tf
 	ON f.id = tf.filename_id
-    	LEFT JOIN tag AS tg
+    	LEFT JOIN tag
         ON tf.tag_id = tag.id
 WHERE tg.tag = %s"""
 

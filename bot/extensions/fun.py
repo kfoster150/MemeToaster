@@ -1,19 +1,16 @@
 import hikari
 import lightbulb
 import os, random, string
+import pandas as pd
 from io import BytesIO
-#import logging
 
 from bot import Bot
 from bot.pic import render
+from data import mt_sql_connect, mt_sql_tags
 
-current_guilds = [os.environ['HOME_GUILD_ID'], # Tutorial
-                  os.environ['ORBITERS_GUILD_ID'], # Orbiters United
+current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
+                  os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
                   ]
-
-inputImageDir = './data/images/input'
-categories = os.listdir(inputImageDir)
-categories.sort()
 
 plugin = lightbulb.Plugin("Functions")
 
@@ -22,40 +19,50 @@ plugin = lightbulb.Plugin("Functions")
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
 
+    tags = mt_sql_tags()
+
+    query_str = f"""
+SELECT COUNT(tf.filename_id)
+FROM tag AS tg
+LEFT JOIN tag_filename AS tf
+ON tg.id = tf.tag_id
+WHERE tg.tag = """
+
     # Create list of categories with number of files
-    cats_list = []
+    tags_list = []
     num_list = []
-    for c in categories:
-        num_pics = len(os.listdir(os.path.join(inputImageDir, c)))
+    for tag in tags:
+        with mt_sql_connect().cursor() as cur:
+            cur.execute(query_str + f"'{tag}'" + ";")
+            num_pics = cur.fetchone()[0]
         pics = str(num_pics) + ' pictures'
-        cats_list.append((c, pics))
+        tags_list.append((tag, pics))
         num_list.append(num_pics)
 
-    num_cats = len(categories)
+    num_tags = len(tags)
 
     # Create embed object
     embed = hikari.Embed(color = 0xFF0000)
 
-    embed.add_field(name = 'Number of categories', value = str(num_cats))
+    embed.add_field(name = 'Number of categories', value = str(num_tags))
     embed.add_field(name = 'Total number of pictures', value = str(sum(num_list)))
     embed.add_field(name = '\u200b', value = "Number of pictures per category:", inline = False)
 
-    for name, value in cats_list:
+    for name, value in tags_list:
         embed.add_field(name = name, value = value, inline = False)
 
     # send embed object
     await ctx.respond(embed = embed)
 
-
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",
                     modifier = lightbulb.commands.OptionModifier.CONSUME_REST)
-@lightbulb.option(name = "category", description = "picture category", type = str, required = True)
-@lightbulb.command(name = "meme", description = "Put a picture category and caption in the toaster", guilds = current_guilds)
+@lightbulb.option(name = "tag", description = "picture tag", type = str, required = True)
+@lightbulb.command(name = "meme", description = "Put a picture tag and caption in the toaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
     caption = ctx.options.caption.strip()
-    category = ctx.options.category.translate(str.maketrans('', '', string.punctuation)).lower()
+    tag = ctx.options.tag.translate(str.maketrans('', '', string.punctuation)).lower()
     
     if len(caption) > 125:
         await ctx.respond("""
@@ -63,20 +70,27 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
     
     else:
 
-        if not category in categories:
+        if not tag in mt_sql_tags():
             await ctx.respond(f"""
-Sorry, I don't have any pictures for '{category}'
+Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.stats for a list of categories
 """)
 
         else:
             await ctx.respond("Toasting meme...")
-            
-            categoryPath = os.path.join(inputImageDir, category)
 
-            images = os.listdir(categoryPath)
+            query_by_tag = f"""
+SELECT filename FROM filename AS f
+	LEFT JOIN tag_filename AS tf
+	ON f.id = tf.filename_id
+    	LEFT JOIN tag
+        ON tf.tag_id = tag.id
+WHERE tag.tag = '{tag}';
+"""
+
+            images = pd.read_sql(query_by_tag, con = mt_sql_connect()).filename.values
             imageChoice = random.choice(images)
-            imagePath = os.path.join(categoryPath, imageChoice)
+            imagePath = os.path.join('./data/images/db', imageChoice)
 
             channel = ctx.get_channel()
  

@@ -21,19 +21,19 @@ async def command_stats(ctx: lightbulb.Context) -> None:
 
     tags = mt_sql_tags()
 
-    query_str = f"""
+    query_str = """
 SELECT COUNT(tf.filename_id)
-FROM tag AS tg
+FROM tag
 LEFT JOIN tag_filename AS tf
-ON tg.id = tf.tag_id
-WHERE tg.tag = """
+ON tag.id = tf.tag_id
+WHERE tag.tag = %s"""
 
     # Create list of tags with number of pictures
     tags_list = []
     num_list = []
     for tag in tags:
         with mt_sql_connect().cursor() as cur:
-            cur.execute(query_str + f"'{tag}'" + ";")
+            cur.execute(query_str, (tag,))
             num_pics = cur.fetchone()[0]
         pics = str(num_pics) + ' pictures'
         tags_list.append((tag, pics))
@@ -79,16 +79,15 @@ Use toast.help or toast.stats for a list of categories
         else:
             await ctx.respond("Toasting meme...")
 
-            query_by_tag = f"""
+            query_by_tag = """
 SELECT filename FROM filename AS f
 	LEFT JOIN tag_filename AS tf
 	ON f.id = tf.filename_id
     	LEFT JOIN tag
         ON tf.tag_id = tag.id
-WHERE tag.tag = '{tag}';
-"""
+WHERE tag.tag = %s"""
 
-            images = pd.read_sql(query_by_tag, con = mt_sql_connect()).filename.values
+            images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)
             imagePath = os.path.join('./data/images/db', imageChoice)
 

@@ -10,7 +10,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         # Override this method to change the message sent when the help command
         # is run without any arguments.
 
-        tags = random.choice(mt_sql_tags(), 12)
+        tags = random.sample(mt_sql_tags(), k=12)
 
         tags_list = [[],[],[]]
         counter = 0

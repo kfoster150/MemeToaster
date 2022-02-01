@@ -84,7 +84,7 @@ WHERE tag.tag = %s"""
         embed.add_field(name = name, value = value, inline = False)
 
     # send embed object
-    await ctx.respond(embed = embed)
+    await ctx.respond("https://raw.githubusercontent.com/kfoster150/MemeToaster2/heroku/data/tags.txt")
 
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",

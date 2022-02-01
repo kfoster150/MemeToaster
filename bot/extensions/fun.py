@@ -51,6 +51,7 @@ f.close()
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
 
+    '''
     tags = mt_sql_tags()
 
     query_str = """
@@ -83,8 +84,10 @@ WHERE tag.tag = %s"""
     for name, value in tags_list:
         embed.add_field(name = name, value = value, inline = False)
 
-    # send embed object
-    await ctx.respond(embed = embed)
+    '''
+
+    # send response
+    await ctx.respond("https://raw.githubusercontent.com/kfoster150/MemeToaster2/heroku/data/tags.txt")
 
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",

@@ -14,7 +14,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         topTags = tags[tags['count'] > 14]['tag'].tolist()
         topTags.sort()
         otherTags = random.sample(
-            tags[tags['count'] < 15]['tag'],
+            tags[tags['count'] < 15]['tag'].tolist(),
             k = 3)
 
         tags_list = [[],[],[]]

@@ -15,17 +15,8 @@ current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
 plugin = lightbulb.Plugin("Functions")
 
 ##### Create tags list
-query_str = """
-SELECT tg.tag, count(tf.filename_id)
-FROM tag_filename AS tf
-LEFT JOIN tag AS tg
-ON tf.tag_id = tg.id
-WHERE tg.tag <> ''
-GROUP BY tg.tag
-ORDER BY count(tf.filename_id) DESC, tg.tag;"""
 
-tagsDf = pd.read_sql(query_str, con = mt_sql_connect())
-tagsList = zip(tagsDf['tag'], tagsDf['count'])
+tagsList = mt_sql_tags()
 
 with mt_sql_connect().cursor() as cur:
     cur.execute("SELECT COUNT(id) FROM tag;")

@@ -14,11 +14,44 @@ current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
 
 plugin = lightbulb.Plugin("Functions")
 
+##### Create tags list
+query_str = """
+SELECT tg.tag, count(tf.filename_id)
+FROM tag_filename AS tf
+LEFT JOIN tag AS tg
+ON tf.tag_id = tg.id
+WHERE tg.tag <> ''
+GROUP BY tg.tag
+ORDER BY count(tf.filename_id) DESC, tg.tag;"""
+
+tagsDf = pd.read_sql(query_str, con = mt_sql_connect())
+tagsList = zip(tagsDf['tag'], tagsDf['count'])
+
+with mt_sql_connect().cursor() as cur:
+    cur.execute("SELECT COUNT(id) FROM tag;")
+    num_tags = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(id) FROM filename;")
+    num_pics = cur.fetchone()[0]
+
+# Create txt file
+f = open("data/tags.txt", "w+")
+
+f.write(f"Number of tags: {num_tags}\n\n")
+f.write(f"Total number of pictures: {num_pics}\n\n")
+f.write("Number of pictures per tag:\n\n")
+
+for tag, count in tagsList:
+    f.write(f"{tag}\n{count}\n\n")
+
+f.close()
+#####
+
 @plugin.command
 @lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
 
+    '''
     tags = mt_sql_tags()
 
     query_str = """
@@ -51,8 +84,10 @@ WHERE tag.tag = %s"""
     for name, value in tags_list:
         embed.add_field(name = name, value = value, inline = False)
 
-    # send embed object
-    await ctx.respond(embed = embed)
+    '''
+
+    # send response
+    await ctx.respond("https://raw.githubusercontent.com/kfoster150/MemeToaster2/heroku/data/tags.txt")
 
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",

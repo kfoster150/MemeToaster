@@ -1,7 +1,6 @@
 import hikari
 import lightbulb
-import os
-import pandas as pd
+import random
 
 from bot import Bot
 from data import mt_sql_tags
@@ -11,7 +10,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         # Override this method to change the message sent when the help command
         # is run without any arguments.
 
-        tags = mt_sql_tags()
+        tags = random.sample(mt_sql_tags(), k=12)
 
         tags_list = [[],[],[]]
         counter = 0
@@ -32,7 +31,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
 """,
                         color = 0xFF0000)
 
-        embed.add_field(name = 'CATEGORIES', value = tags_embed[0],inline = True)
+        embed.add_field(name = 'TAG EXAMPLES', value = tags_embed[0],inline = True)
         embed.add_field(name = '\u200b', value = tags_embed[1], inline = True)
         embed.add_field(name = '\u200b', value = tags_embed[2], inline = True)
 

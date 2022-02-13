@@ -15,8 +15,23 @@ def mt_sql_connect():
 
     return(con)
 
-def mt_sql_tags():
-    tags = read_sql("SELECT tag FROM tag;",
-                    con = mt_sql_connect())['tag'].to_list()
+def mt_sql_tags(output = "Tuples"):
+
+    query_str = """
+SELECT tg.tag, count(tf.filename_id)
+FROM tag_filename AS tf
+LEFT JOIN tag AS tg
+ON tf.tag_id = tg.id
+WHERE tg.tag <> ''
+GROUP BY tg.tag
+ORDER BY count(tf.filename_id) DESC, tg.tag;"""
+
+    tagsDf = read_sql(query_str, con = mt_sql_connect())
+    if output == "Tuples":
+        tags = zip(tagsDf['tag'], tagsDf['count'])
+    elif output == "DataFrame":
+        tags = tagsDf.copy()
+    else:
+        tags = None
 
     return(tags)

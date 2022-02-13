@@ -15,17 +15,8 @@ current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
 plugin = lightbulb.Plugin("Functions")
 
 ##### Create tags list
-query_str = """
-SELECT tg.tag, count(tf.filename_id)
-FROM tag_filename AS tf
-LEFT JOIN tag AS tg
-ON tf.tag_id = tg.id
-WHERE tg.tag <> ''
-GROUP BY tg.tag
-ORDER BY count(tf.filename_id) DESC, tg.tag;"""
 
-tagsDf = pd.read_sql(query_str, con = mt_sql_connect())
-tagsList = zip(tagsDf['tag'], tagsDf['count'])
+tagsList = mt_sql_tags()
 
 with mt_sql_connect().cursor() as cur:
     cur.execute("SELECT COUNT(id) FROM tag;")
@@ -105,7 +96,7 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
     
     else:
 
-        if not tag in mt_sql_tags():
+        if not tag in mt_sql_tags(output = 'DataFrame')['tag']:
             await ctx.respond(f"""
 Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.stats for a list of categories

@@ -17,15 +17,26 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
             tags[tags['count'] < 15]['tag'].tolist(),
             k = 3)
 
-        tags_list = [[],[],[]]
+        
+        splitList = [[],[],[]]
+        rows = round(len(topTags)/3)
+        col = 0
         counter = 0
+        for tag in topTags:
+            splitList[col].append(tag)
+            counter = 0
+            if counter == rows:
+                col += 1
+                counter = 0
+        '''
         for tag in topTags:
             tags_list[counter % 3].append(tag)
             counter += 1
-
-        tags_embed = ["\n".join(tags_list[0]),
-                      "\n".join(tags_list[1]),
-                      "\n".join(tags_list[2])]
+        '''
+        
+        tags_embed = ["\n".join(splitList[0]),
+                      "\n".join(splitList[1]),
+                      "\n".join(splitList[2])]
 
         # Create embed object
         embed = hikari.Embed(title = 'HOW TO USE',
@@ -40,7 +51,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         embed.add_field(name = '\u200b', value = tags_embed[1], inline = True)
         embed.add_field(name = '\u200b', value = tags_embed[2], inline = True)
 
-        embed.add_field(name = "Try these tags too!", value = "   ".join(otherTags))
+        embed.add_field(name = "Try these tags too!", value = "\n".join(otherTags))
 
         embed.add_field(name = '\u200b', value = """
 Type `/stats` for more details

@@ -24,6 +24,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         counter = 0
         for tag in topTags:
             splitList[col].append(tag)
+            counter += 1
             if counter == rows:
                 col += 1
                 counter = 0

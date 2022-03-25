@@ -2,11 +2,15 @@ import hikari
 import lightbulb
 import os, random, string
 import pandas as pd
+import boto3
 from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
 from data import mt_sql_connect, mt_sql_tags
+
+BUCKET = 'memetoaster'
+FOLDER = 'images/db/'
 
 current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
                   os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
@@ -115,17 +119,24 @@ WHERE tag.tag = %s"""
 
             images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)
-            imagePath = os.path.join('./data/images/db', imageChoice)
+            #imagePath = os.path.join('./data/images/db', imageChoice)
 
             channel = ctx.get_channel()
+
+            s3 = boto3.Session(
+                aws_access_key_id = os.environ['AWS_ACCESS_KEY'],
+                aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+            ).resource('s3')
  
-            with BytesIO() as imageBinary:
-                render(imagePath, caption).save(imageBinary, 'JPEG')
+            with BytesIO() as imageBinaryDload:
+                with BytesIO() as imageBinarySend:
+                    s3.Bucket('memetoaster').download_fileobj('images/db/' + imageChoice, imageBinaryDload)
+                    render(imageBinaryDload, caption).save(imageBinarySend, 'JPEG')
 
-                imageBinary.seek(0)
-                await channel.send(imageBinary)
+                    imageBinarySend.seek(0)
+                    await channel.send(imageBinarySend)
 
-            await ctx.edit_last_response("Toasting meme... DING")
+                await ctx.edit_last_response("Toasting meme... DING")
 
 
 def load(bot: Bot):

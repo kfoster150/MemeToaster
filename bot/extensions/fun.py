@@ -2,11 +2,18 @@ import hikari
 import lightbulb
 import os, random, string
 import pandas as pd
+import boto3
 from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
 from data import mt_sql_connect, mt_sql_tags
+
+os.environ['AWS_PROFILE'] = 'boto3user'
+os.environ['AWS_DEFAULT_REGION'] = 'us-west-1'
+
+BUCKET = 'memetoaster'
+FOLDER = 'images/db/'
 
 current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
                   os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
@@ -115,12 +122,16 @@ WHERE tag.tag = %s"""
 
             images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)
-            imagePath = os.path.join('./data/images/db', imageChoice)
+            #imagePath = os.path.join('./data/images/db', imageChoice)
 
             channel = ctx.get_channel()
+
+            s3 = boto3.resource('s3')
  
             with BytesIO() as imageBinary:
-                render(imagePath, caption).save(imageBinary, 'JPEG')
+                s3.Bucket('memetoaster').download_fileobj('images/db/' + imageChoice, imageBinary)
+                imageBinary.seek(0)
+                render(imageBinary, caption).save(imageBinary, 'JPEG')
 
                 imageBinary.seek(0)
                 await channel.send(imageBinary)

@@ -128,15 +128,15 @@ WHERE tag.tag = %s"""
                 aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
             ).resource('s3')
  
-            with BytesIO() as imageBinary:
-                s3.Bucket('memetoaster').download_fileobj('images/db/' + imageChoice, imageBinary)
-                imageBinary.seek(0)
-                render(imageBinary, caption).save(imageBinary, 'JPEG')
+            with BytesIO() as imageBinaryDload:
+                with BytesIO() as imageBinarySend:
+                    s3.Bucket('memetoaster').download_fileobj('images/db/' + imageChoice, imageBinaryDload)
+                    render(imageBinaryDload, caption).save(imageBinarySend, 'JPEG')
 
-                imageBinary.seek(0)
-                await channel.send(imageBinary)
+                    imageBinarySend.seek(0)
+                    await channel.send(imageBinarySend)
 
-            await ctx.edit_last_response("Toasting meme... DING")
+                await ctx.edit_last_response("Toasting meme... DING")
 
 
 def load(bot: Bot):

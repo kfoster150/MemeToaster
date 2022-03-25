@@ -9,9 +9,6 @@ from bot import Bot
 from bot.pic import render
 from data import mt_sql_connect, mt_sql_tags
 
-os.environ['AWS_PROFILE'] = 'boto3user'
-os.environ['AWS_DEFAULT_REGION'] = 'us-west-1'
-
 BUCKET = 'memetoaster'
 FOLDER = 'images/db/'
 
@@ -126,7 +123,10 @@ WHERE tag.tag = %s"""
 
             channel = ctx.get_channel()
 
-            s3 = boto3.resource('s3')
+            s3 = boto3.Session(
+                aws_access_key = os.environ['AWS_ACCESS_KEY'],
+                aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+            ).resource('s3')
  
             with BytesIO() as imageBinary:
                 s3.Bucket('memetoaster').download_fileobj('images/db/' + imageChoice, imageBinary)

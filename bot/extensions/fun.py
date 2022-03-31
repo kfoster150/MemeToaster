@@ -45,43 +45,6 @@ f.close()
 @lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
-
-    '''
-    tags = mt_sql_tags()
-
-    query_str = """
-SELECT COUNT(tf.filename_id)
-FROM tag
-LEFT JOIN tag_filename AS tf
-ON tag.id = tf.tag_id
-WHERE tag.tag = %s"""
-
-    # Create list of tags with number of pictures
-    tags_list = []
-    num_list = []
-    for tag in tags:
-        with mt_sql_connect().cursor() as cur:
-            cur.execute(query_str, (tag,))
-            num_pics = cur.fetchone()[0]
-        pics = str(num_pics) + ' pictures'
-        tags_list.append((tag, pics))
-        num_list.append(num_pics)
-
-    num_tags = len(tags)
-
-    # Create embed object
-    embed = hikari.Embed(color = 0xFF0000)
-
-    embed.add_field(name = 'Number of tags', value = str(num_tags))
-    embed.add_field(name = 'Total number of pictures', value = str(sum(num_list)))
-    embed.add_field(name = '\u200b', value = "Number of pictures per tag:", inline = False)
-
-    for name, value in tags_list:
-        embed.add_field(name = name, value = value, inline = False)
-
-    '''
-
-    # send response
     await ctx.respond("https://raw.githubusercontent.com/kfoster150/MemeToaster2/heroku/data/tags.txt")
 
 @plugin.command
@@ -119,7 +82,6 @@ WHERE tag.tag = %s"""
 
             images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)
-            #imagePath = os.path.join('./data/images/db', imageChoice)
 
             channel = ctx.get_channel()
 
@@ -137,6 +99,67 @@ WHERE tag.tag = %s"""
                     await channel.send(imageBinarySend)
 
                 await ctx.edit_last_response("Toasting meme... DING")
+
+
+### Embed mode
+
+@plugin.command
+@lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",
+                    modifier = lightbulb.commands.OptionModifier.CONSUME_REST)
+@lightbulb.option(name = "tag", description = "picture tag", type = str, required = True)
+@lightbulb.command(name = "emb", description = "Put a picture tag and caption in the toaster", guilds = current_guilds)
+@lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
+async def command_meme(ctx: lightbulb.Context) -> None:
+    caption = ctx.options.caption.strip()
+    tag = ctx.options.tag.translate(str.maketrans('', '', string.punctuation)).lower()
+    
+    if len(caption) > 125:
+        await ctx.respond("""
+It's a meme, not your master's thesis. Your caption has to be 125 characters or less.""")
+    
+    else:
+
+        if not tag in dict(mt_sql_tags()):
+            await ctx.respond(f"""
+Sorry, I don't have any pictures for '{tag}'
+Use toast.help or toast.stats for a list of categories
+""")
+
+        else:
+            await ctx.respond("Toasting embed...")
+
+            query_by_tag = """
+SELECT filename FROM filename AS f
+	LEFT JOIN tag_filename AS tf
+	ON f.id = tf.filename_id
+    	LEFT JOIN tag
+        ON tf.tag_id = tag.id
+WHERE tag.tag = %s"""
+
+            images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
+            imageChoice = random.choice(images)
+
+            channel = ctx.get_channel()
+
+            s3 = boto3.Session(
+                aws_access_key_id = os.environ['AWS_ACCESS_KEY'],
+                aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
+            ).resource('s3')
+ 
+            with BytesIO() as imageBinaryDload:
+                with BytesIO() as imageBinarySend:
+                    s3.Bucket('memetoaster').download_fileobj('images/db/' + imageChoice, imageBinaryDload)
+                    render(imageBinaryDload, caption).save(imageBinarySend, 'JPEG')
+
+                    imageBinarySend.seek(0)
+                    #await channel.send(imageBinarySend)
+                    # Rather than an image, send an embed with tags at the bottom
+
+                    embed = hikari.Embed(image = imageBinarySend)
+                    await channel.send(embed)
+
+                await ctx.edit_last_response("Toasting embed... DING")
+
 
 
 def load(bot: Bot):

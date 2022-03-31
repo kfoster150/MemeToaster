@@ -153,7 +153,8 @@ WHERE tag.tag = %s"""
 
                     imageBinarySend.seek(0)
 
-                    embed = hikari.Embed(footer = "test footer")
+                    embed = hikari.Embed()
+                    embed.set_footer("test footer")
                     embed.set_image(imageBinarySend)
                     await channel.send(embed)
 

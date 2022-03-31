@@ -149,8 +149,9 @@ WHERE f.filename = %s"""
 
             tags = pd.read_sql(query_by_filename, 
                                 con = mt_sql_connect(), 
-                                params = (imageChoice,)).tag.values.sort()
-            tagsSend = ["#" + t for t in tags]
+                                params = (imageChoice,)).tag.tolist()
+            tagsHashed = ["#" + t for t in tags]
+            tagsSend = " ".join(tagsHashed)
 
             channel = ctx.get_channel()
 

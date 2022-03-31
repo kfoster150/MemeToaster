@@ -70,62 +70,6 @@ Use toast.help or toast.stats for a list of categories
 """)
 
         else:
-            await ctx.respond("Toasting meme...")
-
-            query_by_tag = """
-SELECT filename FROM filename AS f
-	LEFT JOIN tag_filename AS tf
-	ON f.id = tf.filename_id
-    	LEFT JOIN tag
-        ON tf.tag_id = tag.id
-WHERE tag.tag = %s"""
-
-            images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
-            imageChoice = random.choice(images)
-
-            channel = ctx.get_channel()
-
-            s3 = boto3.Session(
-                aws_access_key_id = os.environ['AWS_ACCESS_KEY'],
-                aws_secret_access_key = os.environ['AWS_SECRET_ACCESS_KEY']
-            ).resource('s3')
- 
-            with BytesIO() as imageBinaryDload:
-                with BytesIO() as imageBinarySend:
-                    s3.Bucket('memetoaster').download_fileobj('images/db/' + imageChoice, imageBinaryDload)
-                    render(imageBinaryDload, caption).save(imageBinarySend, 'JPEG')
-
-                    imageBinarySend.seek(0)
-                    await channel.send(imageBinarySend)
-
-                await ctx.edit_last_response("Toasting meme... DING")
-
-
-### Embed mode
-
-@plugin.command
-@lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",
-                    modifier = lightbulb.commands.OptionModifier.CONSUME_REST)
-@lightbulb.option(name = "tag", description = "picture tag", type = str, required = True)
-@lightbulb.command(name = "emb", description = "Put a picture tag and caption in the toaster", guilds = current_guilds)
-@lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
-async def command_meme(ctx: lightbulb.Context) -> None:
-    caption = ctx.options.caption.strip()
-    tag = ctx.options.tag.translate(str.maketrans('', '', string.punctuation)).lower()
-    
-    if len(caption) > 125:
-        await ctx.respond("""
-It's a meme, not your master's thesis. Your caption has to be 125 characters or less.""")
-    
-    else:
-
-        if not tag in dict(mt_sql_tags()):
-            await ctx.respond(f"""
-Sorry, I don't have any pictures for '{tag}'
-Use toast.help or toast.stats for a list of categories
-""")
-
-        else:
             await ctx.respond("Toasting embed...")
 
             query_by_tag = """

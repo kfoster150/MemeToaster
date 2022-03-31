@@ -70,7 +70,7 @@ Use toast.help or toast.stats for a list of categories
 """)
 
         else:
-            await ctx.respond("Toasting embed...")
+            await ctx.respond("Toasting meme...")
 
             query_by_tag = """
 SELECT filename FROM filename AS f
@@ -116,7 +116,7 @@ WHERE f.filename = %s"""
                     embed.set_image(imageBinarySend)
                     await channel.send(embed)
 
-                await ctx.edit_last_response("Toasting embed... DING")
+                await ctx.edit_last_response("Toasting meme... DING")
 
 
 

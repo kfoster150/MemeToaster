@@ -139,6 +139,19 @@ WHERE tag.tag = %s"""
             images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)
 
+            query_by_filename = """
+SELECT tag FROM tag as tg
+    LEFT JOIN tag_filename AS tf
+    ON tg.id = tf.tag_id
+        LEFT JOIN filename AS f
+        ON tf.filename_id = f.id
+WHERE f.filename = %s"""
+
+            tags = pd.read_sql(query_by_filename, 
+                                con = mt_sql_connect(), 
+                                params = (imageChoice,)).tag.values.sort()
+            tagsSend = ["#" + t for t in tags]
+
             channel = ctx.get_channel()
 
             s3 = boto3.Session(
@@ -154,7 +167,7 @@ WHERE tag.tag = %s"""
                     imageBinarySend.seek(0)
 
                     embed = hikari.Embed()
-                    embed.set_footer("`test` `footer`")
+                    embed.set_footer(tagsSend)
                     embed.set_image(imageBinarySend)
                     await channel.send(embed)
 

@@ -155,7 +155,8 @@ WHERE tag.tag = %s"""
                     #await channel.send(imageBinarySend)
                     # Rather than an image, send an embed with tags at the bottom
 
-                    embed = hikari.Embed(image = imageBinarySend)
+                    embed = hikari.Embed()
+                    embed.set_image(image = imageBinarySend)
                     await channel.send(embed)
 
                 await ctx.edit_last_response("Toasting embed... DING")

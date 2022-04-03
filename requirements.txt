@@ -6,6 +6,6 @@ hikari-lightbulb
 hikari-tanjun
 pandas
 pillow
-psycopg2
+psycopg2-binary
 uvloop
 wheel

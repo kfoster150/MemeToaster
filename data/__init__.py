@@ -1,4 +1,6 @@
 from os import environ
+from boto3 import Session
+from io import StringIO
 from pandas import read_sql
 from psycopg2 import connect
 from urllib.parse import urlparse
@@ -35,3 +37,30 @@ ORDER BY count(tf.filename_id) DESC, tg.tag;"""
         tags = None
 
     return(tags)
+
+def create_tag_list():
+    ##### Create tags list
+    tagsList = mt_sql_tags()
+
+    with mt_sql_connect().cursor() as cur:
+        cur.execute("SELECT COUNT(id) FROM tag;")
+        num_tags = cur.fetchone()[0]
+        cur.execute("SELECT COUNT(id) FROM filename;")
+        num_pics = cur.fetchone()[0]
+
+    # Write to StringIO, Create S3 session, and upload
+    with StringIO() as tagStats:
+        tagStats.write(f"Number of tags: {num_tags}\n\n")
+        tagStats.write(f"Total number of pictures: {num_pics}\n\n")
+        tagStats.write("Number of pictures per tag:\n\n")
+
+        for tag, count in tagsList:
+            tagStats.write(f"{tag}\n{count}\n\n")
+
+        tagStats.seek(0)
+
+        s3 = Session(
+            aws_access_key_id = environ['AWS_ACCESS_KEY'],
+            aws_secret_access_key = environ['AWS_SECRET_ACCESS_KEY']
+        ).resource('s3')
+        s3.Bucket('memetoaster').upload_fileobj(tagStats, "tags.txt")

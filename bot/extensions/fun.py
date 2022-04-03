@@ -7,45 +7,20 @@ from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
-from data import mt_sql_connect, mt_sql_tags
+from data import *
 
-BUCKET = 'memetoaster'
-FOLDER = 'images/db/'
+create_tag_list()
 
 current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
                   os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
                   ]
-
 plugin = lightbulb.Plugin("Functions")
-
-##### Create tags list
-
-tagsList = mt_sql_tags()
-
-with mt_sql_connect().cursor() as cur:
-    cur.execute("SELECT COUNT(id) FROM tag;")
-    num_tags = cur.fetchone()[0]
-    cur.execute("SELECT COUNT(id) FROM filename;")
-    num_pics = cur.fetchone()[0]
-
-# Create txt file
-f = open("data/tags.txt", "w+")
-
-f.write(f"Number of tags: {num_tags}\n\n")
-f.write(f"Total number of pictures: {num_pics}\n\n")
-f.write("Number of pictures per tag:\n\n")
-
-for tag, count in tagsList:
-    f.write(f"{tag}\n{count}\n\n")
-
-f.close()
-#####
 
 @plugin.command
 @lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
-    await ctx.respond("https://raw.githubusercontent.com/kfoster150/MemeToaster2/heroku/data/tags.txt")
+    await ctx.respond("https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt")
 
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",

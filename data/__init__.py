@@ -63,4 +63,4 @@ def create_tag_list():
             aws_access_key_id = environ['AWS_ACCESS_KEY'],
             aws_secret_access_key = environ['AWS_SECRET_ACCESS_KEY']
         ).resource('s3')
-        s3.Bucket('memetoaster').upload_fileobj(tagStats, "tags.txt")
+        s3.Bucket('memetoaster').upload_fileobj(tagStats, "tags.txt", ExtraArgs={'ACL': "public-read"})

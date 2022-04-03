@@ -49,18 +49,19 @@ def create_tag_list():
         num_pics = cur.fetchone()[0]
 
     # Write to StringIO, Create S3 session, and upload
-    with StringIO() as tagStats:
-        tagStats.write(f"Number of tags: {num_tags}\n\n")
-        tagStats.write(f"Total number of pictures: {num_pics}\n\n")
-        tagStats.write("Number of pictures per tag:\n\n")
+    inptstr = 'empty.txt'
+    with open(inptstr, 'w') as newfile:
+
+        newfile.write(f"Number of tags: {num_tags}\n\n")
+        newfile.write(f"Total number of pictures: {num_pics}\n\n")
+        newfile.write("Number of pictures per tag:\n\n")
 
         for tag, count in tagsList:
-            tagStats.write(f"{tag}\n{count}\n\n")
+            newfile.write(f"{tag}\n{count}\n\n")
 
-        tagStats.seek(0)
+    s3 = Session(
+        aws_access_key_id = environ['AWS_ACCESS_KEY'],
+        aws_secret_access_key = environ['AWS_SECRET_ACCESS_KEY']
+    ).resource('s3')
 
-        s3 = Session(
-            aws_access_key_id = environ['AWS_ACCESS_KEY'],
-            aws_secret_access_key = environ['AWS_SECRET_ACCESS_KEY']
-        ).resource('s3')
-        s3.Bucket('memetoaster').upload_fileobj(tagStats, "tags.txt", ExtraArgs={'ACL': "public-read"})
+    s3.Bucket('memetoaster').upload_file(inptstr, "tags.txt", ExtraArgs={'ACL': "public-read", 'ContentType': 'text/plain'})

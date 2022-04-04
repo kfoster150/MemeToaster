@@ -1,6 +1,5 @@
 from os import environ
 from boto3 import Session
-from io import StringIO
 from pandas import read_sql
 from psycopg2 import connect
 from urllib.parse import urlparse

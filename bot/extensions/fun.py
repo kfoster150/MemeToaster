@@ -11,22 +11,20 @@ from data import *
 
 create_tag_list()
 
-current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
-                  os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
-                  ]
 plugin = lightbulb.Plugin("Functions")
 
 @plugin.command
-@lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", guilds = current_guilds)
+@lightbulb.command(name = "stats", description = "Show stats about the MemeToaster")
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
     await ctx.respond("https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt")
+
 
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",
                     modifier = lightbulb.commands.OptionModifier.CONSUME_REST)
 @lightbulb.option(name = "tag", description = "picture tag", type = str, required = True)
-@lightbulb.command(name = "meme", description = "Put a picture tag and caption in the toaster", guilds = current_guilds)
+@lightbulb.command(name = "meme", description = "Put a picture tag and caption in the toaster")
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
     caption = ctx.options.caption.strip()

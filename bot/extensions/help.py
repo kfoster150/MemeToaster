@@ -28,11 +28,6 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
             if counter == rows:
                 col += 1
                 counter = 0
-        '''
-        for tag in topTags:
-            tags_list[counter % 3].append(tag)
-            counter += 1
-        '''
 
         tags_embed = ["\n".join(splitList[0]),
                       "\n".join(splitList[1]),

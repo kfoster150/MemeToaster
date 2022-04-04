@@ -7,82 +7,20 @@ from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
-from data import mt_sql_connect, mt_sql_tags
+from data import *
 
-BUCKET = 'memetoaster'
-FOLDER = 'images/db/'
+create_tag_list()
 
 current_guilds = [os.environ['HOME_GUILD_ID'], # Testing Server 1
                   os.environ['ORBITERS_GUILD_ID'] # Testing Server 2
                   ]
-
 plugin = lightbulb.Plugin("Functions")
-
-##### Create tags list
-
-tagsList = mt_sql_tags()
-
-with mt_sql_connect().cursor() as cur:
-    cur.execute("SELECT COUNT(id) FROM tag;")
-    num_tags = cur.fetchone()[0]
-    cur.execute("SELECT COUNT(id) FROM filename;")
-    num_pics = cur.fetchone()[0]
-
-# Create txt file
-f = open("data/tags.txt", "w+")
-
-f.write(f"Number of tags: {num_tags}\n\n")
-f.write(f"Total number of pictures: {num_pics}\n\n")
-f.write("Number of pictures per tag:\n\n")
-
-for tag, count in tagsList:
-    f.write(f"{tag}\n{count}\n\n")
-
-f.close()
-#####
 
 @plugin.command
 @lightbulb.command(name = "stats", description = "Show stats about the MemeToaster", guilds = current_guilds)
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
-
-    '''
-    tags = mt_sql_tags()
-
-    query_str = """
-SELECT COUNT(tf.filename_id)
-FROM tag
-LEFT JOIN tag_filename AS tf
-ON tag.id = tf.tag_id
-WHERE tag.tag = %s"""
-
-    # Create list of tags with number of pictures
-    tags_list = []
-    num_list = []
-    for tag in tags:
-        with mt_sql_connect().cursor() as cur:
-            cur.execute(query_str, (tag,))
-            num_pics = cur.fetchone()[0]
-        pics = str(num_pics) + ' pictures'
-        tags_list.append((tag, pics))
-        num_list.append(num_pics)
-
-    num_tags = len(tags)
-
-    # Create embed object
-    embed = hikari.Embed(color = 0xFF0000)
-
-    embed.add_field(name = 'Number of tags', value = str(num_tags))
-    embed.add_field(name = 'Total number of pictures', value = str(sum(num_list)))
-    embed.add_field(name = '\u200b', value = "Number of pictures per tag:", inline = False)
-
-    for name, value in tags_list:
-        embed.add_field(name = name, value = value, inline = False)
-
-    '''
-
-    # send response
-    await ctx.respond("https://raw.githubusercontent.com/kfoster150/MemeToaster2/heroku/data/tags.txt")
+    await ctx.respond("https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt")
 
 @plugin.command
 @lightbulb.option(name = "caption", description = "caption to attach", type = str, default = "",
@@ -119,7 +57,20 @@ WHERE tag.tag = %s"""
 
             images = pd.read_sql(query_by_tag, con = mt_sql_connect(), params = (tag,)).filename.values
             imageChoice = random.choice(images)
-            #imagePath = os.path.join('./data/images/db', imageChoice)
+
+            query_by_filename = """
+SELECT tag FROM tag as tg
+    LEFT JOIN tag_filename AS tf
+    ON tg.id = tf.tag_id
+        LEFT JOIN filename AS f
+        ON tf.filename_id = f.id
+WHERE f.filename = %s"""
+
+            tags = pd.read_sql(query_by_filename, 
+                                con = mt_sql_connect(), 
+                                params = (imageChoice,)).tag.tolist()
+            tagsHashed = ["#" + t for t in tags]
+            tagsSend = " ".join(tagsHashed)
 
             channel = ctx.get_channel()
 
@@ -134,9 +85,14 @@ WHERE tag.tag = %s"""
                     render(imageBinaryDload, caption).save(imageBinarySend, 'JPEG')
 
                     imageBinarySend.seek(0)
-                    await channel.send(imageBinarySend)
+
+                    embed = hikari.Embed()
+                    embed.set_footer(tagsSend)
+                    embed.set_image(imageBinarySend)
+                    await channel.send(embed)
 
                 await ctx.edit_last_response("Toasting meme... DING")
+
 
 
 def load(bot: Bot):

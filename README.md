@@ -11,7 +11,7 @@ Type this: `toast.meme -laugh this bot is hilarious`
 
 And get back something like this:
 
-[is it working][./data/images/README/laugh.png]
+[is it working][data/images/README/laugh.png]
 
 ### Pref][ix Command
 Syntax:

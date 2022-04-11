@@ -13,6 +13,8 @@ And get back something like this:
 
 ![toast.meme -laugh this bot is hilarious](https://user-images.githubusercontent.com/38412483/162673295-cb33065b-4a44-4f1d-baa1-e2663cc9a7ee.png)
 
+Most tags have more than one picture associated with them, meaning the picture you get back is semi-random.
+
 ### Prefix Command
 Syntax:
 toast.meme -tag caption

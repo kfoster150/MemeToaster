@@ -14,10 +14,13 @@ create_tag_list()
 plugin = lightbulb.Plugin("Functions")
 
 @plugin.command
-@lightbulb.command(name = "stats", description = "Show stats about the MemeToaster")
+@lightbulb.command(name = "tags", description = "Get a link to a list of all available tags")
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
-    await ctx.respond("https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt")
+    await ctx.respond("""
+Click here for a list of all available tags:
+https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt
+""")
 
 
 @plugin.command

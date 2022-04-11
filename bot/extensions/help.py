@@ -54,7 +54,9 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         embed.add_field(name = "Try these tags too!", value = "\n".join(otherTags))
 
         embed.add_field(name = '\u200b', value = """
-Type `/stats` for more details
+Type `/tags` for more options
+Go to https://github.com/kfoster150/MemeToaster for full documentation
+
 Feedback? Picture/Tag Suggestions?
 Email: `DiscordMemeToaster@gmail.com`""")
 

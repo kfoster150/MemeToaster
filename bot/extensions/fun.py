@@ -42,7 +42,7 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
         if not tag in dict(mt_sql_tags()):
             await ctx.respond(f"""
 Sorry, I don't have any pictures for '{tag}'
-Use toast.help or toast.stats for a list of categories
+Use toast.help or toast.tags for a list of tags
 """)
 
         else:

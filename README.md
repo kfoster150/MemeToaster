@@ -11,9 +11,9 @@ Type this: `toast.meme -laugh this bot is hilarious`
 
 And get back something like this:
 
-🖼️
+[toast.meme -laugh this bot is hilarious][/data/images/README/laugh.png?raw=true]
 
-### Prefix Command
+### Pref][ix Command
 Syntax:
 toast.meme -tag caption
 

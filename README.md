@@ -11,30 +11,30 @@ Type this: `toast.meme -laugh this bot is hilarious`
 
 And get back something like this:
 
-![is it working][data/images/README/laugh.png]
+![toast.meme -laugh this bot is hilarious](https://user-images.githubusercontent.com/38412483/162673295-cb33065b-4a44-4f1d-baa1-e2663cc9a7ee.png)
 
-### Pref][ix Command
+### Prefix Command
 Syntax:
 toast.meme -tag caption
 
 Example:
 toast.meme -sleep I'm exhausted and I need a nap
 
-🖼️
+![toast.meme -sleep I'm exhausted and I need a nap](https://raw.githubusercontent.com/kfoster150/MemeToaster/master/data/images/README/sleep.png)
 
 ### Slash Command
 Example:
-**/meme** `tag`: wat `caption`: these pretzels are making me thirsty (use screenshot)
+**/meme** `tag`: wat `caption`: these pretzels are making me thirsty
+![these pretzels are making me thirsty](https://user-images.githubusercontent.com/38412483/162673762-856eb151-ee4e-46dc-9df4-40b5bb8c11b4.png)
 
-🖼️
-
+![these pretzels are making me thirsty](https://user-images.githubusercontent.com/38412483/162673884-e3db9dba-0ea3-4414-9316-f488f98f13b0.png)
 
 ## tags
 Type this: `toast.tags`
 
 And get back a link to a list of currently available tags
 
-(screenshot)
+![image](https://user-images.githubusercontent.com/38412483/162674001-5585fab8-30c1-4b8c-898e-717a7342b961.png)
 
 You can check out this list itself here: https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt
 
@@ -45,6 +45,7 @@ Type this: `toast.help`
 
 And receive a quick review on how to use MemeToaster, including a link to this README.
 
+![image](https://user-images.githubusercontent.com/38412483/162674057-7e30c461-c0ae-494a-9bb0-56857ebafe0b.png)
 
 # Permissions
 The following permissions are necessary for MemeToaster to work as intended:

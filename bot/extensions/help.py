@@ -28,11 +28,6 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
             if counter == rows:
                 col += 1
                 counter = 0
-        '''
-        for tag in topTags:
-            tags_list[counter % 3].append(tag)
-            counter += 1
-        '''
 
         tags_embed = ["\n".join(splitList[0]),
                       "\n".join(splitList[1]),
@@ -59,7 +54,11 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         embed.add_field(name = "Try these tags too!", value = "\n".join(otherTags))
 
         embed.add_field(name = '\u200b', value = """
-Type `/stats` for more details
+Type `/tags` for more options
+
+Full documentation:
+https://github.com/kfoster150/MemeToaster#readme
+
 Feedback? Picture/Tag Suggestions?
 Email: `DiscordMemeToaster@gmail.com`""")
 

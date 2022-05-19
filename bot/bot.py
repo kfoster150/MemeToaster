@@ -18,7 +18,7 @@ class Bot(lightbulb.BotApp):
 
         super().__init__(
             prefix = "toast.",
-            token = os.environ['MT2_SECRET'],
+            token = os.environ['MT_SECRET'],
             intents = hikari.Intents.ALL,
         )
 

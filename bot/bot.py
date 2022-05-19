@@ -5,7 +5,7 @@ import hikari
 import lightbulb
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-__VERSION__ = '0.2.0'
+__VERSION__ = '0.5.0'
 
 HOME_GUILD_ID = os.environ['HOME_GUILD_ID']
 STDOUT_CHANNEL_ID = os.environ['STDOUT_CHANNEL_ID']

@@ -1,7 +1,6 @@
 import hikari
 import lightbulb
-import os
-import pandas as pd
+import random
 
 from bot import Bot
 from data import mt_sql_tags
@@ -11,17 +10,33 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         # Override this method to change the message sent when the help command
         # is run without any arguments.
 
-        tags = mt_sql_tags()
+        tags = mt_sql_tags(output = "DataFrame")
+        topTags = tags[tags['count'] > 14]['tag'].tolist()
+        topTags.sort()
+        otherTags = random.sample(
+            tags[tags['count'] < 15]['tag'].tolist(),
+            k = 3)
 
-        tags_list = [[],[],[]]
+        
+        splitList = [[],[],[]]
+        rows = round(len(topTags)/3)
+        col = 0
         counter = 0
-        for tag in tags:
-            tags_list[counter % 3].append(tag)
+        for tag in topTags:
+            splitList[col].append(tag)
             counter += 1
+            if counter == rows:
+                col += 1
+                counter = 0
 
-        tags_embed = ["\n".join(tags_list[0]),
-                      "\n".join(tags_list[1]),
-                      "\n".join(tags_list[2])]
+        tags_embed = ["\n".join(splitList[0]),
+                      "\n".join(splitList[1]),
+                      "\n".join(splitList[2])]
+
+        print(tags_embed[0])
+        print(tags_embed[1])
+        print(tags_embed[2])
+        print(otherTags)
 
         # Create embed object
         embed = hikari.Embed(title = 'HOW TO USE',
@@ -32,12 +47,18 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
 """,
                         color = 0xFF0000)
 
-        embed.add_field(name = 'CATEGORIES', value = tags_embed[0],inline = True)
+        embed.add_field(name = 'TOP TAGS', value = tags_embed[0],inline = True)
         embed.add_field(name = '\u200b', value = tags_embed[1], inline = True)
         embed.add_field(name = '\u200b', value = tags_embed[2], inline = True)
 
+        embed.add_field(name = "Try these tags too!", value = "\n".join(otherTags))
+
         embed.add_field(name = '\u200b', value = """
-Type `/stats` for more details
+Type `/tags` for more options
+
+Full documentation:
+https://github.com/kfoster150/MemeToaster#readme
+
 Feedback? Picture/Tag Suggestions?
 Email: `DiscordMemeToaster@gmail.com`""")
 

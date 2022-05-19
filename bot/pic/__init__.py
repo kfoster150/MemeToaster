@@ -20,10 +20,10 @@ def wrap_text(text, font, max_width):
 
     return(lines)
 
-def render(imagePath, caption) -> Image:
+def render(imageBinary, caption) -> Image:
 
     # Load image
-    img = Image.open(imagePath).convert("RGBA")
+    img = Image.open(imageBinary).convert("RGBA")
 
     # Text scaling:
     # Font size ~= (image width + image height)/20

@@ -5,7 +5,11 @@ import hikari
 import lightbulb
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-__VERSION__ = '0.5.0'
+__VERSION__ = os.environ['VERSION']
+if __VERSION__ == "PUBLIC":
+    PREFIX = "toast."
+elif __VERSION__ == "TEST":
+    PREFIX = "test."
 
 HOME_GUILD_ID = os.environ['HOME_GUILD_ID']
 STDOUT_CHANNEL_ID = os.environ['STDOUT_CHANNEL_ID']
@@ -17,7 +21,7 @@ class Bot(lightbulb.BotApp):
 
 
         super().__init__(
-            prefix = "toast.",
+            prefix = PREFIX,
             token = os.environ['MT_SECRET'],
             intents = hikari.Intents.ALL,
         )

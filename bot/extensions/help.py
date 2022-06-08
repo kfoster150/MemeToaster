@@ -11,11 +11,9 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         # is run without any arguments.
 
         tags = mt_sql_tags(output = "DataFrame")
-        topTags = tags[tags['count'] > 14]['tag'].tolist()
+        topTags = tags.iloc[:18]['tag'].tolist()
         topTags.sort()
-        otherTags = random.sample(
-            tags[tags['count'] < 15]['tag'].tolist(),
-            k = 3)
+        otherTags = tags.iloc[19:]['tag'].sample(3).tolist()
 
         
         splitList = [[],[],[]]
@@ -32,11 +30,6 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         tags_embed = ["\n".join(splitList[0]),
                       "\n".join(splitList[1]),
                       "\n".join(splitList[2])]
-
-        print(tags_embed[0])
-        print(tags_embed[1])
-        print(tags_embed[2])
-        print(otherTags)
 
         # Create embed object
         embed = hikari.Embed(title = 'HOW TO USE',
@@ -56,7 +49,7 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
         embed.add_field(name = '\u200b', value = """
 Type `/tags` for more options
 
-Full documentation:
+Full Guide with Examples!
 https://github.com/kfoster150/MemeToaster#readme
 
 Feedback? Picture/Tag Suggestions?

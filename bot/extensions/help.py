@@ -31,11 +31,6 @@ class ToasterHelp(lightbulb.BaseHelpCommand):
                       "\n".join(splitList[1]),
                       "\n".join(splitList[2])]
 
-        print(tags_embed[0])
-        print(tags_embed[1])
-        print(tags_embed[2])
-        print(otherTags)
-
         # Create embed object
         embed = hikari.Embed(title = 'HOW TO USE',
         description = """

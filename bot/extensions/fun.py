@@ -39,11 +39,18 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
     
     else:
 
-        if not tag in dict(mt_sql_tags()):
+        conn = mt_sql_connect()
+        tagSet = set(dict(
+            mt_sql_tags(conn = conn, close = False)
+            ))
+
+        if not tag in tagSet:
             await ctx.respond(f"""
 Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.tags for a list of tags
 """)
+            log_tag(tag = tag, caption = caption, 
+                    success = 0, conn = conn)
 
         else:
             await ctx.respond("Toasting meme...")
@@ -55,8 +62,6 @@ Use toast.help or toast.tags for a list of tags
             LEFT JOIN tag
             ON tf.tag_id = tag.id
     WHERE tag.tag = %s;"""
-
-            conn = mt_sql_connect()
 
             with conn.cursor() as curs:
                 curs.execute(query_by_tag, (tag,))
@@ -75,8 +80,6 @@ Use toast.help or toast.tags for a list of tags
             with conn.cursor() as curs:
                 curs.execute(query_by_filename, (imageChoice,))
                 tags = [tg[0] for tg in curs.fetchall()]
-
-            conn.close()
 
             tagsHashed = ["#" + t for t in tags]
             tagsSend = " ".join(tagsHashed)
@@ -102,7 +105,10 @@ Use toast.help or toast.tags for a list of tags
 
                 await ctx.edit_last_response("Toasting meme... DING")
 
+            log_tag(tag = tag, caption = caption, 
+                    success = 1, conn = conn)
 
+            print(f"toast.meme: {conn.closed}")
 
 def load(bot: Bot):
     bot.add_plugin(plugin)

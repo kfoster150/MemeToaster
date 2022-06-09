@@ -1,6 +1,5 @@
 import hikari
 import lightbulb
-import random
 
 from bot import Bot
 from data import mt_sql_tags

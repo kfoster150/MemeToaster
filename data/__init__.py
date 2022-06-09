@@ -39,7 +39,7 @@ ORDER BY count(tf.filename_id) DESC, tg.tag;"""
     return(tags)
 
 
-def log_tag(tag, caption, success, conn):
+def mt_log_tag(tag, caption, success, conn):
 
     datetime = dt.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -80,3 +80,7 @@ def create_tag_list(conn):
     ).resource('s3')
 
     s3.Bucket('memetoaster').upload_file(inptstr, "tags.txt", ExtraArgs={'ACL': "public-read", 'ContentType': 'text/plain'})
+
+conn = mt_sql_connect()
+create_tag_list(conn)
+conn.close()

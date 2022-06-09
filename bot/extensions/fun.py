@@ -7,9 +7,7 @@ from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
-from data import *
-
-create_tag_list()
+from data import mt_log_tag, mt_sql_connect, mt_sql_tags
 
 plugin = lightbulb.Plugin("Functions")
 
@@ -49,8 +47,8 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
 Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.tags for a list of tags
 """)
-            log_tag(tag = tag, caption = caption, 
-                    success = "0", conn = conn)
+            mt_log_tag(tag = tag, caption = caption, 
+                       success = "0", conn = conn)
 
         else:
             await ctx.respond("Toasting meme...")
@@ -105,8 +103,8 @@ WHERE f.filename = %s;"""
 
                 await ctx.edit_last_response("Toasting meme... DING")
 
-            log_tag(tag = tag, caption = caption, 
-                    success = "1", conn = conn)
+            mt_log_tag(tag = tag, caption = caption, 
+                       success = "1", conn = conn)
 
             conn.close()
 

@@ -41,14 +41,12 @@ ORDER BY count(tf.filename_id) DESC, tg.tag;"""
 
 def mt_log_tag(tag, caption, success, conn):
 
-    datetime = dt.now().strftime("%Y-%m-%d %H:%M:%S")
-
     log_tag_string = """
-    INSERT INTO tag_log (tag, caption, datetime, success)
-    VALUES (%s, %s, %s, %s)"""
+    INSERT INTO tag_log (tag, caption, success)
+    VALUES (%s, %s, %s)"""
 
     with conn.cursor() as curs:
-        curs.execute(log_tag_string, vars = (tag, caption, datetime, success))
+        curs.execute(log_tag_string, vars = (tag, caption, success))
     conn.commit()
 
 

@@ -1,4 +1,3 @@
-from datetime import datetime as dt
 from os import environ
 from boto3 import Session
 from pandas import DataFrame

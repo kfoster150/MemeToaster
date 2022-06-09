@@ -1,3 +1,4 @@
+from datetime import datetime as dt
 from os import environ
 from boto3 import Session
 from pandas import DataFrame
@@ -17,7 +18,7 @@ def mt_sql_connect():
     return(conn)
 
 
-def mt_sql_tags(output = "Tuples"):
+def mt_sql_tags(output = "Tuples", conn = mt_sql_connect(), close = True):
 
     query_str = """
 SELECT tg.tag, count(tf.filename_id)
@@ -28,7 +29,7 @@ WHERE tg.tag <> ''
 GROUP BY tg.tag
 ORDER BY count(tf.filename_id) DESC, tg.tag;"""
 
-    conn = mt_sql_connect()
+    conn = conn
 
     with conn.cursor() as curs:
         curs.execute(query_str)
@@ -37,9 +38,26 @@ ORDER BY count(tf.filename_id) DESC, tg.tag;"""
     if output == "DataFrame":
         tags = DataFrame(tags, columns = ['tag','count'])
 
-    conn.close()
+    if close:
+        conn.close()
 
     return(tags)
+
+
+def log_tag(tag, caption, success, conn = mt_sql_connect(), close = True):
+
+    datetime = dt.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    log_tag_string = """
+    INSERT INTO tag_log (tag, caption, datetime, success
+    VALUES (%s, %s, %s, %s)"""
+
+    with conn.cursor() as curs:
+        curs.execute(log_tag_string, vars = (tag, caption, datetime, success))
+    conn.commit()
+
+    if close:
+        conn.close()
 
 
 def create_tag_list():

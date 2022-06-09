@@ -7,9 +7,7 @@ from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
-from data import *
-
-create_tag_list()
+from data import mt_log_tag, mt_sql_connect, mt_sql_tags
 
 plugin = lightbulb.Plugin("Functions")
 
@@ -39,24 +37,29 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
     
     else:
 
-        if not tag in dict(mt_sql_tags()):
+        conn = mt_sql_connect()
+        tagSet = set(dict(
+            mt_sql_tags(conn)
+            ))
+
+        if not tag in tagSet:
             await ctx.respond(f"""
 Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.tags for a list of tags
 """)
+            mt_log_tag(tag = tag, caption = caption, 
+                       success = "0", conn = conn)
 
         else:
             await ctx.respond("Toasting meme...")
 
             query_by_tag = """
-    SELECT filename FROM filename AS f
-        LEFT JOIN tag_filename AS tf
-        ON f.id = tf.filename_id
-            LEFT JOIN tag
-            ON tf.tag_id = tag.id
-    WHERE tag.tag = %s;"""
-
-            conn = mt_sql_connect()
+SELECT filename FROM filename AS f
+LEFT JOIN tag_filename AS tf
+ON f.id = tf.filename_id
+LEFT JOIN tag
+ON tf.tag_id = tag.id
+WHERE tag.tag = %s;"""
 
             with conn.cursor() as curs:
                 curs.execute(query_by_tag, (tag,))
@@ -65,18 +68,16 @@ Use toast.help or toast.tags for a list of tags
             imageChoice = random.choice(images)
 
             query_by_filename = """
-    SELECT tag FROM tag as tg
-        LEFT JOIN tag_filename AS tf
-        ON tg.id = tf.tag_id
-            LEFT JOIN filename AS f
-            ON tf.filename_id = f.id
-    WHERE f.filename = %s;"""
+SELECT tag FROM tag as tg
+LEFT JOIN tag_filename AS tf
+ON tg.id = tf.tag_id
+LEFT JOIN filename AS f
+ON tf.filename_id = f.id
+WHERE f.filename = %s;"""
 
             with conn.cursor() as curs:
                 curs.execute(query_by_filename, (imageChoice,))
                 tags = [tg[0] for tg in curs.fetchall()]
-
-            conn.close()
 
             tagsHashed = ["#" + t for t in tags]
             tagsSend = " ".join(tagsHashed)
@@ -102,7 +103,10 @@ Use toast.help or toast.tags for a list of tags
 
                 await ctx.edit_last_response("Toasting meme... DING")
 
+            mt_log_tag(tag = tag, caption = caption, 
+                       success = "1", conn = conn)
 
+            conn.close()
 
 def load(bot: Bot):
     bot.add_plugin(plugin)

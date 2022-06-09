@@ -17,7 +17,7 @@ def mt_sql_connect():
     return(conn)
 
 
-def mt_sql_tags(output = "Tuples"):
+def mt_sql_tags(conn, output = "Tuples"):
 
     query_str = """
 SELECT tg.tag, count(tf.filename_id)
@@ -28,8 +28,6 @@ WHERE tg.tag <> ''
 GROUP BY tg.tag
 ORDER BY count(tf.filename_id) DESC, tg.tag;"""
 
-    conn = mt_sql_connect()
-
     with conn.cursor() as curs:
         curs.execute(query_str)
         tags = curs.fetchall()
@@ -37,16 +35,26 @@ ORDER BY count(tf.filename_id) DESC, tg.tag;"""
     if output == "DataFrame":
         tags = DataFrame(tags, columns = ['tag','count'])
 
-    conn.close()
-
     return(tags)
 
 
-def create_tag_list():
-    ##### Create tags list
-    tagsList = mt_sql_tags()
+def mt_log_tag(tag, caption, success, conn):
 
-    with mt_sql_connect().cursor() as cur:
+    log_tag_string = """
+    INSERT INTO tag_log (tag, caption, success)
+    VALUES (%s, %s, %s)"""
+
+    with conn.cursor() as curs:
+        curs.execute(log_tag_string, vars = (tag, caption, success))
+    conn.commit()
+
+
+def create_tag_list(conn):
+
+    ##### Create tags list
+    tagsList = mt_sql_tags(conn = conn)
+
+    with conn.cursor() as cur:
         cur.execute("SELECT COUNT(id) FROM tag;")
         num_tags = cur.fetchone()[0]
         cur.execute("SELECT COUNT(id) FROM filename;")
@@ -69,3 +77,7 @@ def create_tag_list():
     ).resource('s3')
 
     s3.Bucket('memetoaster').upload_file(inptstr, "tags.txt", ExtraArgs={'ACL': "public-read", 'ContentType': 'text/plain'})
+
+conn = mt_sql_connect()
+create_tag_list(conn)
+conn.close()

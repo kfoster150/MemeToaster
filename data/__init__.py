@@ -49,7 +49,7 @@ def log_tag(tag, caption, success, conn = mt_sql_connect(), close = True):
     datetime = dt.now().strftime("%Y-%m-%d %H:%M:%S")
 
     log_tag_string = """
-    INSERT INTO tag_log (tag, caption, datetime, success
+    INSERT INTO tag_log (tag, caption, datetime, success)
     VALUES (%s, %s, %s, %s)"""
 
     with conn.cursor() as curs:

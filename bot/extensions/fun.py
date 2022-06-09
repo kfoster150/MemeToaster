@@ -50,7 +50,7 @@ Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.tags for a list of tags
 """)
             log_tag(tag = tag, caption = caption, 
-                    success = 0, conn = conn)
+                    success = "0", conn = conn)
 
         else:
             await ctx.respond("Toasting meme...")
@@ -106,7 +106,7 @@ Use toast.help or toast.tags for a list of tags
                 await ctx.edit_last_response("Toasting meme... DING")
 
             log_tag(tag = tag, caption = caption, 
-                    success = 1, conn = conn)
+                    success = "1", conn = conn)
 
             print(f"toast.meme: {conn.closed}")
 

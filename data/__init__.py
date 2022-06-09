@@ -13,12 +13,12 @@ def mt_sql_connect():
         user = url.username,
         password = url.password,
         host = url.hostname,
-        port = url.port)
+        port = url.port).reset()
 
     return(conn)
 
 
-def mt_sql_tags(output = "Tuples", conn = mt_sql_connect(), close = True):
+def mt_sql_tags(output = "Tuples", connection = mt_sql_connect(), close = True):
 
     query_str = """
 SELECT tg.tag, count(tf.filename_id)
@@ -29,7 +29,7 @@ WHERE tg.tag <> ''
 GROUP BY tg.tag
 ORDER BY count(tf.filename_id) DESC, tg.tag;"""
 
-    conn = conn
+    conn = connection
 
     with conn.cursor() as curs:
         curs.execute(query_str)

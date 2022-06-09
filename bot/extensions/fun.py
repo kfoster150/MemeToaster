@@ -41,7 +41,7 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
 
         conn = mt_sql_connect()
         tagSet = set(dict(
-            mt_sql_tags(conn = conn, close = False)
+            mt_sql_tags(conn)
             ))
 
         if not tag in tagSet:
@@ -56,12 +56,12 @@ Use toast.help or toast.tags for a list of tags
             await ctx.respond("Toasting meme...")
 
             query_by_tag = """
-    SELECT filename FROM filename AS f
-        LEFT JOIN tag_filename AS tf
-        ON f.id = tf.filename_id
-            LEFT JOIN tag
-            ON tf.tag_id = tag.id
-    WHERE tag.tag = %s;"""
+SELECT filename FROM filename AS f
+LEFT JOIN tag_filename AS tf
+ON f.id = tf.filename_id
+LEFT JOIN tag
+ON tf.tag_id = tag.id
+WHERE tag.tag = %s;"""
 
             with conn.cursor() as curs:
                 curs.execute(query_by_tag, (tag,))
@@ -70,12 +70,12 @@ Use toast.help or toast.tags for a list of tags
             imageChoice = random.choice(images)
 
             query_by_filename = """
-    SELECT tag FROM tag as tg
-        LEFT JOIN tag_filename AS tf
-        ON tg.id = tf.tag_id
-            LEFT JOIN filename AS f
-            ON tf.filename_id = f.id
-    WHERE f.filename = %s;"""
+SELECT tag FROM tag as tg
+LEFT JOIN tag_filename AS tf
+ON tg.id = tf.tag_id
+LEFT JOIN filename AS f
+ON tf.filename_id = f.id
+WHERE f.filename = %s;"""
 
             with conn.cursor() as curs:
                 curs.execute(query_by_filename, (imageChoice,))
@@ -108,7 +108,7 @@ Use toast.help or toast.tags for a list of tags
             log_tag(tag = tag, caption = caption, 
                     success = "1", conn = conn)
 
-            print(f"toast.meme: {conn.closed}")
+            conn.close()
 
 def load(bot: Bot):
     bot.add_plugin(plugin)

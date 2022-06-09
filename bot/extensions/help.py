@@ -2,14 +2,17 @@ import hikari
 import lightbulb
 
 from bot import Bot
-from data import mt_sql_tags
+from data import mt_sql_connect, mt_sql_tags
 
 class ToasterHelp(lightbulb.BaseHelpCommand):
     async def send_bot_help(self, context):
         # Override this method to change the message sent when the help command
         # is run without any arguments.
 
-        tags = mt_sql_tags(output = "DataFrame")
+        conn = mt_sql_connect()
+        tags = mt_sql_tags(conn, output = "DataFrame")
+        conn.close()
+
         topTags = tags.iloc[:18]['tag'].tolist()
         topTags.sort()
         otherTags = tags.iloc[19:]['tag'].sample(3).tolist()

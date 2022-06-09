@@ -13,12 +13,12 @@ def mt_sql_connect():
         user = url.username,
         password = url.password,
         host = url.hostname,
-        port = url.port).reset()
+        port = url.port)
 
     return(conn)
 
 
-def mt_sql_tags(output = "Tuples", connection = mt_sql_connect(), close = True):
+def mt_sql_tags(conn, output = "Tuples"):
 
     query_str = """
 SELECT tg.tag, count(tf.filename_id)
@@ -29,8 +29,6 @@ WHERE tg.tag <> ''
 GROUP BY tg.tag
 ORDER BY count(tf.filename_id) DESC, tg.tag;"""
 
-    conn = connection
-
     with conn.cursor() as curs:
         curs.execute(query_str)
         tags = curs.fetchall()
@@ -38,13 +36,10 @@ ORDER BY count(tf.filename_id) DESC, tg.tag;"""
     if output == "DataFrame":
         tags = DataFrame(tags, columns = ['tag','count'])
 
-    if close:
-        conn.close()
-
     return(tags)
 
 
-def log_tag(tag, caption, success, conn = mt_sql_connect(), close = True):
+def log_tag(tag, caption, success, conn):
 
     datetime = dt.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -56,15 +51,13 @@ def log_tag(tag, caption, success, conn = mt_sql_connect(), close = True):
         curs.execute(log_tag_string, vars = (tag, caption, datetime, success))
     conn.commit()
 
-    if close:
-        conn.close()
 
+def create_tag_list(conn):
 
-def create_tag_list():
     ##### Create tags list
-    tagsList = mt_sql_tags()
+    tagsList = mt_sql_tags(conn = conn)
 
-    with mt_sql_connect().cursor() as cur:
+    with conn.cursor() as cur:
         cur.execute("SELECT COUNT(id) FROM tag;")
         num_tags = cur.fetchone()[0]
         cur.execute("SELECT COUNT(id) FROM filename;")

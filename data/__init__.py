@@ -1,7 +1,8 @@
 
 from os import environ, path
 from boto3 import Session
-from json import loads
+from json import loads, dumps
+from logging import info
 from pandas import DataFrame
 from psycopg2 import connect
 from random import choice, shuffle
@@ -90,13 +91,18 @@ conn.close()
 
 ####
 
-def call_thesaurus(word):
+def call_thesaurus(tag: str):
     base_url = "https://od-api.oxforddictionaries.com/api/v2"
-    url = path.join(base_url, "thesaurus", "en-us", word.lower())
+    url = path.join(base_url, "thesaurus", "en-us", tag.lower())
 
     r = get(url, headers = {"app_id":environ["THES_APP_KEY"],
                             "app_key":environ["THES_APP_KEY"]})
 
+    # Log thesaurus call results
+    info("code {}\n".format(r.status_code))
+    info("text \n" + r.text)
+    info("json \n" + dumps(r.json()))
+    
     data = loads(r.content)
 
     if "results" in data.keys():

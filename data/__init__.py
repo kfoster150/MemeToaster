@@ -139,7 +139,7 @@ def tag_search(tag, tagSet, conn):
             thes_results = call_thesaurus(tag)
             thes_matches = set(thes_results).intersection(set(tagSet))
             thes_tag = choice(tuple(thes_matches))
-            imageChoice = query_filename_by_tag(thes_tag)
+            imageChoice = query_filename_by_tag(thes_tag, conn)
         except IndexError:
             imageChoice = None
     else:

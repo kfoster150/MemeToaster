@@ -1,6 +1,7 @@
 
 from os import path
-import json
+from json import loads
+from logging import info
 from random import shuffle
 from requests import get
 
@@ -15,16 +16,11 @@ def call_thesaurus(word):
                             "app_key":"b1d7dab86664ab89ec0b37b4765263e8",
                             "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"})
 
-    print("code {}\n".format(r.status_code))
-    print("text \n" + r.text)
-    print("json \n" + json.dumps(r.json()))
+    # Log thesaurus call results
+    info(f"Code: {r.status_code}\nText: {r.text}")
 
-    
-    
-    data = json.loads(r.content)
-    print(data)
+    data = loads(r.content)
 
-    """
     if "results" in data.keys():
         entries = data['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms']
         thes_results = [entry["text"] for entry in entries]
@@ -34,6 +30,6 @@ def call_thesaurus(word):
         thes_results = []
 
     return(thes_results)
-    """
 
-call_thesaurus("zzz")
+thes_results = call_thesaurus("concerned")
+print(thes_results)

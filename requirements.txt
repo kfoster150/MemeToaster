@@ -7,5 +7,6 @@ hikari-tanjun
 pandas
 pillow
 psycopg2-binary
+requests
 uvloop
 wheel

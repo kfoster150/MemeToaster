@@ -7,7 +7,7 @@ from io import BytesIO
 
 from bot import Bot
 from bot.pic import render
-from data import mt_log_tag, mt_sql_connect, mt_sql_tags
+from data import *
 
 plugin = lightbulb.Plugin("Functions")
 
@@ -42,7 +42,9 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
             mt_sql_tags(conn)
             ))
 
-        if not tag in tagSet:
+        imageChoice = tag_search(tag, tagSet, conn)
+
+        if imageChoice is None:
             await ctx.respond(f"""
 Sorry, I don't have any pictures for '{tag}'
 Use toast.help or toast.tags for a list of tags
@@ -52,20 +54,6 @@ Use toast.help or toast.tags for a list of tags
 
         else:
             await ctx.respond("Toasting meme...")
-
-            query_by_tag = """
-SELECT filename FROM filename AS f
-LEFT JOIN tag_filename AS tf
-ON f.id = tf.filename_id
-LEFT JOIN tag
-ON tf.tag_id = tag.id
-WHERE tag.tag = %s;"""
-
-            with conn.cursor() as curs:
-                curs.execute(query_by_tag, (tag,))
-                images = [im[0] for im in curs.fetchall()]
-
-            imageChoice = random.choice(images)
 
             query_by_filename = """
 SELECT tag FROM tag as tg

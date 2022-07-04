@@ -101,8 +101,10 @@ def call_thesaurus(tag: str):
     # Log thesaurus call results
     info("code {}\n".format(r.status_code))
     info("text \n" + r.text)
-    info("json \n" + dumps(r.json()))
-    
+
+    thes_results = []
+
+    """    
     data = loads(r.content)
 
     if "results" in data.keys():
@@ -112,6 +114,8 @@ def call_thesaurus(tag: str):
         shuffle(thes_results)
     else:
         thes_results = []
+
+    """
 
     return(thes_results)
 

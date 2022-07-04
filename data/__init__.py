@@ -1,8 +1,13 @@
-from os import environ
+
+from os import environ, path
 from boto3 import Session
+from json import loads
 from pandas import DataFrame
 from psycopg2 import connect
+from random import choice, shuffle
+from requests import get
 from urllib.parse import urlparse
+
 
 def mt_sql_connect():
     url = urlparse(environ['DATABASE_URL'])
@@ -81,3 +86,60 @@ def create_tag_list(conn):
 conn = mt_sql_connect()
 create_tag_list(conn)
 conn.close()
+
+
+####
+
+def call_thesaurus(word):
+    base_url = "https://od-api.oxforddictionaries.com/api/v2"
+    url = path.join(base_url, "thesaurus", "en-us", word.lower())
+
+    r = get(url, headers = {"app_id":environ["THES_APP_KEY"],
+                            "app_key":environ["THES_APP_KEY"]})
+
+    data = loads(r.content)
+
+    if "results" in data.keys():
+        entries = data['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms']
+        thes_results = [entry["text"] for entry in entries]
+        thes_results = [k for k in thes_results if " " not in k and "-" not in k]
+        shuffle(thes_results)
+    else:
+        thes_results = []
+
+    return(thes_results)
+
+
+def query_filename_by_tag(tag, conn):
+    query_by_tag = """
+    SELECT filename FROM filename AS f
+        LEFT JOIN tag_filename AS tf
+        ON f.id = tf.filename_id
+            LEFT JOIN tag
+            ON tf.tag_id = tag.id
+    WHERE tag.tag = %s;"""
+
+    with conn.cursor() as curs:
+        curs.execute(query_by_tag, (tag,))
+        images = [im[0] for im in curs.fetchall()]
+
+    imageChoice = choice(images)
+
+    return(imageChoice)
+
+
+def tag_search(tag, tagSet, conn):
+
+    if tag not in tagSet:
+        try:
+            thes_results = call_thesaurus(tag)
+            thes_matches = set(thes_results).intersection(set(tagSet))
+            thes_tag = choice(tuple(thes_matches))
+            imageChoice = query_filename_by_tag(thes_tag)
+        except IndexError:
+            imageChoice = None
+    else:
+        imageChoice = query_filename_by_tag(tag, conn)
+    
+    return(imageChoice)
+

@@ -1,12 +1,12 @@
 
 from os import environ, path
-from boto3 import Session
+import boto3
 from json import loads
 from logging import info
 from pandas import DataFrame
 from psycopg2 import connect
 from random import choice, shuffle
-from requests import Session
+import requests
 from urllib.parse import urlparse
 
 
@@ -77,7 +77,7 @@ def create_tag_list(conn):
         for tag, count in tagsList:
             newfile.write(f"{tag}\n{count}\n\n")
 
-    s3 = Session(
+    s3 = boto3.Session(
         aws_access_key_id = environ['AWS_ACCESS_KEY'],
         aws_secret_access_key = environ['AWS_SECRET_ACCESS_KEY']
     ).resource('s3')
@@ -127,7 +127,7 @@ def search_oxford(tag: str, tagSet: set):
                "app_key":"b1d7dab86664ab89ec0b37b4765263e8"}
 
     # Start requests session
-    session = Session()
+    session = requests.Session()
     session.headers.update(headers)
 
     # Call lemma

@@ -96,7 +96,8 @@ def call_thesaurus(tag: str):
     url = path.join(base_url, "thesaurus", "en-us", tag.lower())
 
     r = get(url, headers = {"app_id":environ["THES_APP_KEY"],
-                            "app_key":environ["THES_APP_KEY"]})
+                            "app_key":environ["THES_APP_KEY"],
+                            "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"})
 
     # Log thesaurus call results
     info("code {}\n".format(r.status_code))

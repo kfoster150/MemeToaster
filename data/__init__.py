@@ -1,12 +1,12 @@
 
 from os import environ, path
 from boto3 import Session
-from json import loads, dumps
+from json import loads
 from logging import info
 from pandas import DataFrame
 from psycopg2 import connect
 from random import choice, shuffle
-from requests import get
+from requests import Session
 from urllib.parse import urlparse
 
 

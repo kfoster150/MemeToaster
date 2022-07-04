@@ -1,5 +1,5 @@
 
-from email.mime import base
+
 from os import path
 from json import loads
 from logging import info
@@ -70,7 +70,7 @@ def search_oxford(tag: str, tagSet: set):
     return(ox_result)
 
 
-tagSet = set( ["worried", "run", "duck"] )
+tagSet = set( ["worried", "run", "duck", "firework"] )
 
 while True:
     tag = input("input: ")

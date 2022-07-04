@@ -95,17 +95,12 @@ def call_thesaurus(tag: str):
     base_url = "https://od-api.oxforddictionaries.com/api/v2"
     url = path.join(base_url, "thesaurus", "en-us", tag.lower())
 
-    r = get(url, headers = {"app_id":environ["THES_APP_KEY"],
-                            "app_key":environ["THES_APP_KEY"],
-                            "User-Agent":"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36"})
+    r = get(url, headers = {"app_id":environ["THES_APP_ID"],
+                            "app_key":environ["THES_APP_KEY"]})
 
     # Log thesaurus call results
-    info("code {}\n".format(r.status_code))
-    info("text \n" + r.text)
+    info(f"Code: {r.status_code}\nText: {r.text}")
 
-    thes_results = []
-
-    """    
     data = loads(r.content)
 
     if "results" in data.keys():
@@ -115,8 +110,6 @@ def call_thesaurus(tag: str):
         shuffle(thes_results)
     else:
         thes_results = []
-
-    """
 
     return(thes_results)
 

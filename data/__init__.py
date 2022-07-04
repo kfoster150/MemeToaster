@@ -89,19 +89,26 @@ create_tag_list(conn)
 conn.close()
 
 
-####
+#### Oxford
 
-def call_thesaurus(tag: str):
-    base_url = "https://od-api.oxforddictionaries.com/api/v2"
-    url = path.join(base_url, "thesaurus", "en-us", tag.lower())
+def call_lemma(tag: str, base_url: str, session):
+    url = path.join(base_url, "lemmas", "en-us", tag)
+    data = loads(
+        session.get(url).content
+    )
 
-    r = get(url, headers = {"app_id":environ["THES_APP_ID"],
-                            "app_key":environ["THES_APP_KEY"]})
+    if "results" in data.keys():
+        lemm_results = data['results'][0]['lexicalEntries'][0]['inflectionOf'][0]['text']
+    else:
+        lemm_results = tag
+    return(lemm_results)
 
-    # Log thesaurus call results
-    info(f"Code: {r.status_code}\nText: {r.text}")
 
-    data = loads(r.content)
+def call_thesaurus(tag: str, base_url: str, session):
+    url = path.join(base_url, "thesaurus", "en-us", tag)
+    data = loads(
+        session.get(url).content
+    )
 
     if "results" in data.keys():
         entries = data['results'][0]['lexicalEntries'][0]['entries'][0]['senses'][0]['synonyms']
@@ -111,8 +118,41 @@ def call_thesaurus(tag: str):
     else:
         thes_results = []
 
-    return(thes_results)
+    return(set(thes_results))
 
+
+def search_oxford(tag: str, tagSet: set):
+    base_url = "https://od-api.oxforddictionaries.com/api/v2"
+    headers = {"app_id":"1886dbb1",
+               "app_key":"b1d7dab86664ab89ec0b37b4765263e8"}
+
+    # Start requests session
+    session = Session()
+    session.headers.update(headers)
+
+    # Call lemma
+    lemm_tag = call_lemma(tag = tag, base_url = base_url,
+                          session = session)
+
+    # Possibly call thesaurus
+    if lemm_tag not in tagSet:
+
+        try:
+            thes_results = call_thesaurus(tag = lemm_tag, 
+                                          base_url = base_url,
+                                          session = session)
+            thes_matches = thes_results.intersection(tagSet)
+            ox_result = choice(tuple(thes_matches))
+        except IndexError:
+            ox_result = None
+    else:
+        ox_result = lemm_tag
+
+    # Return Result    
+    return(ox_result)
+
+
+#### Image selection
 
 def query_filename_by_tag(tag, conn):
     query_by_tag = """
@@ -135,15 +175,12 @@ def query_filename_by_tag(tag, conn):
 def tag_search(tag, tagSet, conn):
 
     if tag not in tagSet:
-        try:
-            thes_results = call_thesaurus(tag)
-            thes_matches = set(thes_results).intersection(set(tagSet))
-            thes_tag = choice(tuple(thes_matches))
-            imageChoice = query_filename_by_tag(thes_tag, conn)
-        except IndexError:
+        ox_result = search_oxford(tag, tagSet)
+        if ox_result is None:
             imageChoice = None
+        else:
+            imageChoice = query_filename_by_tag(ox_result, conn)
     else:
         imageChoice = query_filename_by_tag(tag, conn)
-    
-    return(imageChoice)
 
+    return(imageChoice)

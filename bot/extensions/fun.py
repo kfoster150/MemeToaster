@@ -16,7 +16,7 @@ plugin = lightbulb.Plugin("Functions")
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_stats(ctx: lightbulb.Context) -> None:
     await ctx.respond("""
-Click here for a list of all available tags:
+{ctx.author.mention} click here for a list of all available tags:
 https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt
 """)
 
@@ -29,11 +29,13 @@ https://memetoaster.s3.us-west-1.amazonaws.com/tags.txt
 @lightbulb.implements(lightbulb.SlashCommand, lightbulb.PrefixCommand)
 async def command_meme(ctx: lightbulb.Context) -> None:
     caption = ctx.options.caption.strip()
-    tag = ctx.options.tag.translate(str.maketrans('', '', string.punctuation)).lower()
+    tag = ctx.options.tag.translate(
+        str.maketrans('', '', string.punctuation + string.digits)
+        ).split()[0].lower()
     
     if len(caption) > 125:
-        await ctx.respond("""
-It's a meme, not your master's thesis. Your caption has to be 125 characters or less.""")
+        await ctx.respond(f"""
+{ctx.author.mention} it's a meme, not your master's thesis. Your caption has to be 125 characters or less.""")
     
     else:
 
@@ -46,7 +48,7 @@ It's a meme, not your master's thesis. Your caption has to be 125 characters or 
 
         if imageChoice is None:
             await ctx.respond(f"""
-Sorry, I don't have any pictures for '{tag}'
+Sorry {ctx.author.mention}, I don't have any pictures for '{tag}'...yet!
 Use toast.help or toast.tags for a list of tags
 """)
             mt_log_tag(tag = tag, caption = caption, 

@@ -10,7 +10,7 @@ def wrap_text(text, font, max_width):
         i = 0
         while i < len(words):
             line = ''
-            while i < len(words) and font.getsize(line + words[i])[0] <= max_width:
+            while i < len(words) and font.getbbox(line + words[i])[2] <= max_width:
                 line = line + words[i] + " "
                 i += 1
             if not line:

@@ -3,7 +3,7 @@ from PIL import Image, ImageDraw, ImageFont
 def wrap_text(text, font, max_width):
     lines = []
 
-    if font.getsize(text)[0] <= max_width:
+    if font.getbbox(text)[2] <= max_width:
         lines.append(text)
     else:
         words = text.split(' ')
@@ -43,7 +43,7 @@ def render(imageBinary, caption) -> Image:
 
     heights = []
     for i in range(0, len(caption_wrapped)):
-        heights.append( font.getsize(caption_wrapped[i])[1] )
+        heights.append( font.getbbox(caption_wrapped[i])[3] )
 
     t_height = sum(heights)
 
@@ -54,7 +54,7 @@ def render(imageBinary, caption) -> Image:
 
     for line in caption_wrapped:
         draw.text((margin, offset), line, font = font, stroke_width=stroke_width, stroke_fill ='black')
-        offset += font.getsize(line)[1]
+        offset += font.getbbox(line)[3]
 
     # Add watermark
     wm = Image.open('./data/images/watermark transparent.png')

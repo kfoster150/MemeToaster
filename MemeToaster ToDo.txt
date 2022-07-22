@@ -1,0 +1,61 @@
+MemeTester protocol:
+
+-Create new git branch
+-Turn heroku/MemeTester ON, have it pull code from new git branch
+
+Test all changes under memeTESTER heroku app, which
+has the bot secret set to a test app
+
+turn worker dyno ON under heroku app settings to deploy it
+
+#################################
+
+Stuff to do
+
+- Address pillow deprecation (font.getsize())
+
+- Integrate "set" operations for faster tag searching?
+
+- Create separate error for using multiple words in "tag"
+	- "One word only plz"
+	
+
+- Incorporate nsfw options
+	- Only enable nsfw when channel allows it
+	- Add nsfw true/false to filenames
+	- add nsfw options to editoaster and uptoaster
+		
+case insensitive prefix? (toast. Toast. TOAST.)
+	
+WATCH CARBERRA'S VIDEO ON PILLOW
+
+# Extra
+
+- go through steps to install psycopg2 library from source
+	- https://www.psycopg.org/docs/install.html
+- (properly) modify the help command - Carberra tutorial might have something
+- Migrate from Heroku to another host (paid?)
+
+
+# Extra Extra
+- Remove any extra code from the carberra tutorial
+- Comment on everything for others using this code.
+
+-add text position metadata to pictures
+
+-Add two line function: ^how do you find will smith in the snow _look for fresh prints
+
+-Add text comparison to 'cat doesn't exist' error
+	-'I don't have 'hunger'. Did you mean 'hungry'?'
+
+-Replace message limit with text shrinker-inater
+
+-Create system for user-uploaded pics and categories
+
+Discord Picture Submitter
+User messages picture to discord (owner only)
+- In message, user invokes toast.submit
+- In message, user submits comma separated tags
+- Toaster saves uploads picture to Amazon S3
+- Toaster adds picture url to database
+- Toaster adds tag relationships to database
